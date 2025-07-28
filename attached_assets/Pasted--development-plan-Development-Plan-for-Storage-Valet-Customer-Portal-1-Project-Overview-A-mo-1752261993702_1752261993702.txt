@@ -1,0 +1,231 @@
+<development_plan>
+# Development Plan for Storage Valet Customer Portal
+
+## 1. Project Overview
+A mobile-first web application for Storage Valet, a pickup/delivery storage service. The app enables customers to manage their storage inventory with photos, schedule pickups and deliveries, and handle account management. Built with React, Tailwind CSS, Node.js/Express, and integrates with existing Airtable database and Dropbox storage.
+
+## 2. Main Components/Features
+- **Landing Page** - Marketing page with service information and pricing
+- **Authentication System** - Email/password signup and login with sessions
+- **Customer Dashboard** - Overview of storage stats and quick actions
+- **Inventory Management** - CRUD operations for stored items with photos
+- **Schedule Pickup** - Book pickup appointments for items at home
+- **Request Delivery** - Schedule delivery of stored items
+- **API Backend** - RESTful endpoints for all operations
+- **Airtable Integration** - Connection to existing database
+- **Dropbox Integration** - Photo storage system
+- **Mobile-Responsive UI** - Optimized for all screen sizes
+
+## 3. Task Breakdown
+
+### Project Setup & Configuration
+- Initialize React app with Tailwind CSS in Replit
+- Set up Express server with CORS and session middleware
+- Configure environment variables (.env file)
+- Create folder structure as specified
+- Install required dependencies (airtable, dropbox, express-session, bcrypt)
+
+### Landing Page
+- Create Landing.jsx component with responsive layout
+- Implement hero section with CTA buttons
+- Build "How it works" section with 3-step process
+- Create reusable Card component for pricing ($169/$259/$399)
+- Add service area list component
+- Implement Navigation component with login/signup links
+- Apply brand colors and typography
+
+### Authentication System
+- **Backend Tasks:**
+  - Create auth.js API routes
+  - Implement password hashing with bcrypt
+  - Set up session management
+  - Create signup endpoint with Airtable user creation
+  - Create login endpoint with session creation
+  - Add authentication middleware for protected routes
+  - Implement /api/auth/me endpoint
+
+- **Frontend Tasks:**
+  - Create Signup.jsx with form validation
+  - Implement plan selection UI
+  - Create Login.jsx with email/password fields
+  - Add form error handling and loading states
+  - Implement auth context for global state
+  - Create protected route wrapper component
+
+### Customer Dashboard
+- Create Dashboard.jsx layout component
+- Build stats cards showing total items, value, plan usage
+- Implement visual meter for plan usage
+- Create quick action buttons component
+- Build recent items grid (last 6 items)
+- Connect to API for user data fetching
+- Add loading and empty states
+
+### Inventory Management
+- **Backend Tasks:**
+  - Create items.js API routes
+  - Implement getUserItems function for Airtable
+  - Create POST endpoint for new items
+  - Add PUT endpoint for updates
+  - Implement DELETE endpoint
+  - Add photo URL handling
+
+- **Frontend Tasks:**
+  - Create Inventory.jsx page component
+  - Build ItemCard component with photo display
+  - Implement responsive grid layout
+  - Create Modal component for add/edit
+  - Build photo upload with base64 conversion
+  - Add category dropdown and value input
+  - Implement item status badges
+
+### Photo Upload System
+- Set up Dropbox SDK configuration
+- Create uploadImage utility function
+- Implement file size validation (max 5MB)
+- Add image preview before upload
+- Create fallback placeholder system
+- Handle upload progress indication
+- Implement error handling for failed uploads
+
+### Schedule Pickup
+- **Backend Tasks:**
+  - Create movements.js API routes
+  - Implement zone-based slot availability
+  - Add route capacity tracking logic
+  - Create pickup scheduling endpoint
+  - Add business logic for 72-hour encouragement
+
+- **Frontend Tasks:**
+  - Create SchedulePickup.jsx page
+  - Build item selection with checkboxes
+  - Implement date picker component
+  - Create time slot selector
+  - Add special instructions textarea
+  - Display emergency contact info
+  - Implement confirmation flow
+
+### Request Delivery
+- Duplicate pickup flow for delivery
+- Add logic for "in_storage" items only
+- Implement combo booking option UI
+- Add $24 fee notification after first free delivery
+- Create seasonal rotation promotion
+- Connect to delivery API endpoint
+
+### Business Logic Implementation
+- Add setup fee charging on signup
+- Implement monthly subscription start logic
+- Create anniversary billing calculation
+- Add payment retry logic (3 attempts/7 days)
+- Implement referral system ($50 credit)
+- Add service suspension for failed payments
+
+## 4. Prioritization and Timeline
+
+### Phase 1: Foundation (Days 1-2)
+**Day 1:**
+- Morning: Project setup, folder structure, dependencies
+- Afternoon: Express server, environment variables, basic routing
+- Evening: Landing page implementation
+
+**Day 2:**
+- Morning: Authentication backend (signup/login endpoints)
+- Afternoon: Authentication frontend (forms, validation)
+- Evening: Protected routes, session management
+
+### Phase 2: Core Features (Days 3-4)
+**Day 3:**
+- Morning: Dashboard layout and components
+- Afternoon: Inventory page and item grid
+- Evening: Add/edit item modals
+
+**Day 4:**
+- Morning: Photo upload system with Dropbox
+- Afternoon: Schedule pickup flow
+- Evening: Time slot availability logic
+
+### Phase 3: Polish & Deploy (Day 5)
+**Day 5:**
+- Morning: Request delivery flow
+- Afternoon: Mobile responsiveness testing
+- Evening: Error handling, deployment
+
+## 5. Potential Challenges
+
+- **Airtable API Limits**: Implement caching and batch operations to avoid rate limiting
+- **Photo Management**: Handle large files gracefully with compression and progress indicators
+- **Zone-Based Scheduling**: Complex logic for route capacity and availability
+- **Session Security**: Ensure secure session handling in Replit's environment
+- **Mobile Touch Interactions**: Test thoroughly on actual devices
+- **Real-time Sync**: Keep UI in sync with Airtable data changes
+- **Payment Integration**: Careful handling of setup fees and subscription timing
+
+## 6. Resource Requirements
+
+### API Keys & Credentials
+- Airtable API key and base ID
+- Dropbox access token
+- Stripe API keys (for future payment processing)
+- Session secret for Express
+
+### Development Tools
+- Replit workspace with Node.js
+- Chrome DevTools for responsive testing
+- Postman for API testing
+- Sample images for testing uploads
+
+### Third-Party Services
+- Airtable (existing database)
+- Dropbox (2TB storage available)
+- Email service for notifications (Phase 2)
+- Stripe for payments (Phase 2)
+
+### Assets
+- Brand colors CSS variables
+- Logo and brand assets
+- Icons for UI elements
+- Sample item photos for demos
+
+## 7. Testing and QA Recommendations
+
+### Unit Testing
+- Test API endpoints with mock data
+- Validate form inputs and error states
+- Test authentication flow
+- Verify photo upload limits
+
+### Integration Testing
+- Test Airtable CRUD operations
+- Verify Dropbox upload/retrieval
+- Test session persistence
+- Validate scheduling logic
+
+### User Acceptance Testing
+- Mobile responsiveness (375px to desktop)
+- Touch interactions on mobile
+- Form validation and error messages
+- Loading states and error handling
+- Cross-browser compatibility
+
+### Performance Testing
+- Image loading optimization
+- API response times
+- Bundle size optimization
+- Lighthouse scores for mobile
+
+## 8. Project Summary
+
+The Storage Valet Customer Portal is a comprehensive web application that enables users to manage their storage inventory through a modern, mobile-first interface. Key features include photo-based inventory management, intelligent scheduling for pickups and deliveries, and seamless integration with existing Airtable and Dropbox infrastructure.
+
+**Timeline**: 5 days of focused development
+**Tech Stack**: React, Tailwind CSS, Node.js, Express, Airtable, Dropbox
+**Key Deliverables**: 
+- Responsive customer portal
+- Secure authentication system
+- Photo-based inventory management
+- Smart scheduling system
+- Mobile-optimized experience
+
+The project follows a phased approach, prioritizing core functionality first, then adding features incrementally. The plan emphasizes mobile responsiveness, user experience, and integration with existing business systems while maintaining flexibility for future enhancements like payment processing and email notifications.
+</development_plan>

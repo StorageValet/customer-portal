@@ -1,0 +1,45 @@
+Understood. Let's capitalize on the momentum.
+
+Here is a new, consolidated prompt for the Replit Agent. This "Full Feature Sprint" combines the final refinement task with the strategic roadmap features. It is a prioritized checklist to guide the agent through building out the rest of the application's core and advanced functionality today.
+
+---
+
+### **Prompt for Replit Agent:**
+
+Excellent work. We are now moving into a full-feature sprint to complete all remaining development. Your new goal is to implement the final polish and all advanced features from the project roadmap.
+
+Please complete your current task and then proceed with the following prioritized tasks in order.
+
+### **Full Feature Sprint: Prioritized Task List**
+
+**1. Complete Final Refinements**
+* Confirm you have finished implementing the **Global Loading & Error States** (Task 5) and the **Dynamic Tutorial Overlays**. Once complete, move to the next task.
+
+**2. Implement the Full Authentication Suite**
+This is the highest priority. We need a complete and secure authentication system.
+* **Password Reset:**
+    * Create a "Forgot Password" page and workflow.
+    * Build a backend endpoint that generates a secure, single-use reset token, sends a password reset email to the user, and a corresponding page for the user to enter a new password.
+* **Magic Link Login:**
+    * Implement a "Sign in with Magic Link" option on the `/login` page.
+    * This will send an email with a secure, single-use link that, when clicked, automatically authenticates the user and redirects them to the dashboard.
+
+**3. Activate Bulk Inventory Management**
+The UI for this feature is present in `inventory.tsx`; now, we need to make it functional.
+* **Backend:** Create new API endpoints that can accept an array of item IDs to perform:
+    * Batch status updates (e.g., marking multiple items as `in_storage`).
+    * Bulk deletions.
+* **Frontend:** Connect the existing UI controls (checkboxes, "Mark as...", "Delete" buttons) on the `/inventory` page to these new backend endpoints.
+
+**4. Enhance AI Chatbot with "Tools" for Data Access**
+Upgrade the AI assistant to answer specific questions about the user's account.
+* **Backend:** Create a new, secure endpoint (e.g., `POST /api/ai-query`). This endpoint will accept a query from the chatbot (e.g., `{ query: 'next_appointment' }`) and securely fetch the relevant data for the authenticated user from the database.
+* **Frontend:** In `ai-chatbot.tsx`, add logic to detect a user's intent to query their data. When detected, call the `/api/ai-query` endpoint and feed the result back into the context for the AI model, allowing it to provide specific answers like, "Your next pickup is scheduled for tomorrow at 2 PM."
+
+**5. Implement Live AI Categorization**
+Replace the hardcoded categorization logic with a real-time AI call.
+* **File:** `smart-categorizer.tsx`
+* **Action:** Modify the `suggestCategory` function. It should now make an API call to a new backend endpoint (e.g., `POST /api/categorize-item`).
+* **Backend:** This new endpoint will take the item's name and description and use an external AI call to determine the most appropriate category, returning it to the frontend.
+
+Please begin with Task 1 and report on your progress.

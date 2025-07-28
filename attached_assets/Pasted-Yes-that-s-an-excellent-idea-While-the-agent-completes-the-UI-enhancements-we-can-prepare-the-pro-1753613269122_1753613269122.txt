@@ -1,0 +1,41 @@
+Yes, that's an excellent idea. While the agent completes the UI enhancements, we can prepare the prompt for the final task in our initial refinement plan and outline a strategic roadmap for the next set of features.
+
+This ensures a seamless transition and maintains development momentum.
+
+---
+
+### **Immediate Next Step: Task 5**
+
+Once the agent confirms Task 4 is complete, this will be the prompt for the final task in our current plan.
+
+**Prompt for Replit Agent:**
+
+Excellent work on the dashboard UI. For the final task, proceed with **Task 5: Implement Global Loading & Error States.**
+
+The goal is to make the application feel more responsive and professional by providing clear feedback to the user during data operations.
+
+**5.1. Implement Loading Skeletons**
+* **Action:** On pages that fetch data upon loading (`/dashboard`, `/inventory`, `/appointments`, `/analytics`), implement loading skeleton components.
+* **Logic:** These skeletons should mimic the layout of the page content and be displayed while the main `useQuery` hooks are in their `isLoading` state. This provides a better perceived performance than a simple spinner.
+
+**5.2. Implement Global Error Notifications**
+* **Action:** Ensure every API mutation (form submissions, button clicks that change data) is wrapped in a `try/catch` block or uses the `onError` handler from `useMutation`.
+* **Logic:** When an API call fails, use the `useToast` hook to display a "destructive" variant toast notification to the user. The error message should be clear and user-friendly (e.g., "Failed to add item. Please try again."). This will provide consistent error feedback across the entire application.
+
+---
+
+### **Planning for the Future: A Strategic Roadmap**
+
+After Task 5 is complete, the initial refinement will be finished. Here is a prioritized list of the next major features to build, based on your project documentation.
+
+1.  **Full Authentication Suite (Magic Link & Password Reset):**
+    * This is the highest priority post-refinement task. The business plan and Q&A guide identify "Forgot Password" as a critical Phase 2 feature. We will have the agent build the secure password reset flow and implement a primary "magic link" login option for existing customers.
+
+2.  **Bulk Inventory Management:**
+    * The UI for bulk actions already exists on the `/inventory` page. The next step is to build the backend functionality. We will have the agent create API endpoints that can accept an array of item IDs to perform batch updates (changing status) or bulk deletions.
+
+3.  **Enhanced AI Chatbot with "Tools":**
+    * Currently, the chatbot is conversational. The next evolution is to give it "tools" to securely access the user's own data. For example, a user could ask, "Which container has my winter coat?" and the AI could query the user's inventory to provide a specific answer.
+
+4.  **Live AI-Powered Categorization:**
+    * The `smart-categorizer.tsx` component uses a function with predefined keywords to suggest categories. We can upgrade this to make a real-time API call to an AI model, sending the item's name and description to get a more accurate and intelligent category suggestion.

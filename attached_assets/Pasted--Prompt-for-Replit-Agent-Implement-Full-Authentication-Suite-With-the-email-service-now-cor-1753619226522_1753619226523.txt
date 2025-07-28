@@ -1,0 +1,28 @@
+### Prompt for Replit Agent: Implement Full Authentication Suite ###
+
+With the email service now correctly configured, your next priority is to build out the complete authentication suite to provide users with secure and convenient ways to access and manage their accounts.
+
+Please implement the following features in order.
+
+#### **Task 1: Password Reset Functionality**
+
+1.  **Frontend:**
+    * Create a "Forgot Password?" link on the `/login` page.
+    * This link should lead to a new page (`/forgot-password`) with a form for the user to submit their email address.
+    * Create a second new page (`/reset-password/:token`) that includes a form for the user to enter and confirm their new password.
+
+2.  **Backend (`server/routes.ts`):**
+    * Create a `POST /api/auth/forgot-password` endpoint. This will generate a secure, time-limited reset token, save its hash to the user's record in the database, and use the existing `emailService` to send a password reset link to the user's email.
+    * Create a `POST /api/auth/reset-password` endpoint. This will validate the token from the URL, verify it has not expired, and if valid, hash the new password and update the user's record in the database.
+
+#### **Task 2: Magic Link Login**
+
+1.  **Frontend (`client/src/pages/login.tsx`):**
+    * Implement the "Sign in with Magic Link" option. This should present a simple view for the user to enter their email address.
+2.  **Backend (`server/routes.ts`):**
+    * Create a `POST /api/auth/magic-link` endpoint. This will generate a secure, single-use login token and use the `emailService` to email a special login link to the user.
+    * Create a `GET /api/auth/magic-login` endpoint that accepts the token. This endpoint will validate the token, create a new session for the user (logging them in), and then redirect them to the `/dashboard`.
+
+---
+
+After the authentication suite is complete, the next logical step will be to build the backend functionality for the **Bulk Inventory Management** feature.

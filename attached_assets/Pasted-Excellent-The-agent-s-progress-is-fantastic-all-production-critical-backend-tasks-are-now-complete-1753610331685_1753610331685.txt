@@ -1,0 +1,47 @@
+Excellent. The agent's progress is fantastic; all production-critical backend tasks are now complete.
+
+You should direct the agent to proceed with **Task 4**. This task focuses on enhancing the UI to match the premium quality of your service and provide more value to the customer.
+
+Here is the detailed prompt for Task 4. You can copy and paste this directly to the Replit Agent.
+
+***
+
+**Prompt for Replit Agent:**
+
+Affirmative. The production-critical backend tasks are complete. Proceed with **Task 4: Enhance the Dashboard UI/UX.**
+
+The goal is to transform the dashboard from a simple data overview into a more insightful and visually engaging experience for the customer.
+
+### **4.1. Redesign the Main Statistic Cards**
+
+* **File:** `client/src/pages/dashboard.tsx`
+* **Action:** Update the four main statistic cards (`Total Items`, `Total Value`, `Insurance`, `Plan Usage`) with a more modern design.
+* **Logic:**
+    * Each card should prominently feature a relevant icon from the `lucide-react` library.
+    * Display the main value in a large, bold font.
+    * Include a descriptive label below the value.
+    * Use the `Progress` component for `Insurance` and `Plan Usage` cards to visually show the percentage used against the total limit. For example, the insurance card should show both the total value of items and the user's total coverage limit.
+
+### **4.2. Add a "Value by Category" Chart**
+
+* **Action:** Create a new reusable component at `client/src/components/category-chart.tsx`.
+* **Library:** Use the `recharts` library, which is already a project dependency.
+* **Logic:**
+    1.  The component will accept the user's `items` array as a prop.
+    2.  It must process this array to calculate the sum of `estimatedValue` for each item `category`.
+    3.  It should render a `PieChart` from `recharts` to visualize this data.
+    4.  The chart should include a `Tooltip` that displays the category name and its total value on hover.
+* **Integration:** Import and add this new component to the `dashboard.tsx` page, below the main statistic cards.
+
+### **4.3. Add a "Recent Activity" Timeline**
+
+* **Action:** Create another new component at `client/src/components/activity-timeline.tsx`.
+* **Logic:**
+    1.  The component will accept the user's `movements` array as a prop.
+    2.  It should sort the movements by `scheduledDate` in descending order and take the most recent 3-5 entries.
+    3.  It should render a simple vertical timeline. Each timeline entry must display an icon (`Package` for pickup, `Truck` for delivery), the movement type, and the formatted date.
+* **Integration:** Import and add this component to the `dashboard.tsx` page.
+
+### **4.4. Verification**
+
+* **Goal:** Confirm that the new dashboard UI is implemented and functional. It should display the redesigned, more informative statistic cards, a working pie chart for value distribution, and a timeline of recent movements, all populated with live data.
