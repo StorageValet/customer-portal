@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(152, 62%, 96%); /* mint-cream */
+  --foreground: hsl(217, 96%, 11%); /* oxford-blue */
+  --muted: hsl(152, 62%, 96%); /* mint-cream */
+  --muted-foreground: hsl(219, 23%, 27%); /* charcoal */
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(217, 96%, 11%); /* oxford-blue */
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(217, 96%, 11%); /* oxford-blue */
+  --border: hsl(0, 0%, 80%); /* silver */
+  --input: hsl(0, 0%, 80%); /* silver */
+  --primary: hsl(146, 41%, 36%); /* sea-green */
+  --primary-foreground: hsl(152, 62%, 96%); /* mint-cream */
+  --secondary: hsl(219, 23%, 27%); /* charcoal */
+  --secondary-foreground: hsl(152, 62%, 96%); /* mint-cream */
+  --accent: hsl(146, 41%, 36%); /* sea-green */
+  --accent-foreground: hsl(152, 62%, 96%); /* mint-cream */
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(60, 9%, 98%);
+  --ring: hsl(146, 41%, 36%); /* sea-green */
+  --radius: 0.5rem;
+
+  /* Storage Valet Brand Colors */
+  --oxford-blue: hsl(217, 96%, 11%);
+  --charcoal: hsl(219, 23%, 27%);
+  --silver: hsl(0, 0%, 80%);
+  --mint-cream: hsl(152, 62%, 96%);
+  --sea-green: hsl(146, 41%, 36%);
+  
+  /* Legacy color names mapped to new palette */
+  --navy: hsl(217, 96%, 11%); /* oxford-blue */
+  --teal: hsl(146, 41%, 36%); /* sea-green */
+  --teal-dark: hsl(146, 41%, 26%); /* darker sea-green */
+  --teal-medium: hsl(146, 41%, 46%); /* lighter sea-green */
+  --white-teal: hsl(152, 62%, 96%); /* mint-cream */
+  --gray-regent: hsl(219, 23%, 27%); /* charcoal */
+  --dark-blue: hsl(217, 96%, 11%); /* oxford-blue */
+}
+
+.dark {
+  --background: hsl(240, 10%, 4%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 4%, 16%);
+  --muted-foreground: hsl(240, 5%, 65%);
+  --popover: hsl(240, 10%, 4%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 4%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 4%, 16%);
+  --input: hsl(240, 4%, 16%);
+  --primary: hsl(188, 83%, 67%);
+  --primary-foreground: hsl(207, 90%, 19%);
+  --secondary: hsl(240, 4%, 16%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 4%, 16%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 5%, 84%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Text colors */
+  .text-oxford-blue {
+    color: var(--oxford-blue);
+  }
+  
+  .text-charcoal {
+    color: var(--charcoal);
+  }
+  
+  .text-silver {
+    color: var(--silver);
+  }
+  
+  .text-mint-cream {
+    color: var(--mint-cream);
+  }
+  
+  .text-sea-green {
+    color: var(--sea-green);
+  }
+  
+  /* Background colors */
+  .bg-oxford-blue {
+    background-color: var(--oxford-blue);
+  }
+  
+  .bg-charcoal {
+    background-color: var(--charcoal);
+  }
+  
+  .bg-silver {
+    background-color: var(--silver);
+  }
+  
+  .bg-mint-cream {
+    background-color: var(--mint-cream);
+  }
+  
+  .bg-sea-green {
+    background-color: var(--sea-green);
+  }
+  
+  /* Border colors */
+  .border-oxford-blue {
+    border-color: var(--oxford-blue);
+  }
+  
+  .border-charcoal {
+    border-color: var(--charcoal);
+  }
+  
+  .border-silver {
+    border-color: var(--silver);
+  }
+  
+  .border-mint-cream {
+    border-color: var(--mint-cream);
+  }
+  
+  .border-sea-green {
+    border-color: var(--sea-green);
+  }
+  
+  /* Legacy class names for backward compatibility */
+  .text-navy {
+    color: var(--navy);
+  }
+  
+  .text-teal {
+    color: var(--teal);
+  }
+  
+  .text-teal-dark {
+    color: var(--teal-dark);
+  }
+  
+  .text-teal-medium {
+    color: var(--teal-medium);
+  }
+  
+  .text-gray-regent {
+    color: var(--gray-regent);
+  }
+  
+  .text-dark-blue {
+    color: var(--dark-blue);
+  }
+  
+  .bg-navy {
+    background-color: var(--navy);
+  }
+  
+  .bg-teal {
+    background-color: var(--teal);
+  }
+  
+  .bg-teal-dark {
+    background-color: var(--teal-dark);
+  }
+  
+  .bg-teal-medium {
+    background-color: var(--teal-medium);
+  }
+  
+  .bg-white-teal {
+    background-color: var(--white-teal);
+  }
+  
+  .bg-dark-blue {
+    background-color: var(--dark-blue);
+  }
+  
+  .border-teal {
+    border-color: var(--teal);
+  }
+  
+  .border-navy {
+    border-color: var(--navy);
+  }
+  
+  .hover\:bg-teal-medium:hover {
+    background-color: var(--teal-medium);
+  }
+  
+  .hover\:bg-dark-blue:hover {
+    background-color: var(--dark-blue);
+  }
+  
+  .hover\:text-teal:hover {
+    color: var(--teal);
+  }
+  
+  .hover\:text-teal-dark:hover {
+    color: var(--teal-dark);
+  }
+  
+  .hover\:border-teal:hover {
+    border-color: var(--teal);
+  }
+  
+  .focus\:ring-teal:focus {
+    --tw-ring-color: var(--teal);
+  }
+}
