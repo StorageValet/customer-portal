@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "attached_assets/**",
+    "SV_REVIEW_*/**",
+    "client/src/__tests__/**",
+    "server/__tests__/**",
+    "server/routes_old.ts",
+    "server_old/**"
+  ]
+}
