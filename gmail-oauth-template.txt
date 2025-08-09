@@ -1,0 +1,12 @@
+# Gmail OAuth2 Configuration Template
+# Copy these values to your .env file
+
+# From Google Cloud Console (Step 2.3):
+GMAIL_CLIENT_ID=your_client_id_here
+GMAIL_CLIENT_SECRET=your_client_secret_here
+
+# From OAuth Playground (Step 3.4):
+GMAIL_REFRESH_TOKEN=your_refresh_token_here
+
+# Your Gmail address:
+GMAIL_USER_EMAIL=support@storagevalet.com

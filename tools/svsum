@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$REPO_ROOT"
+mkdir -p "$REPO_ROOT/.sv"
+
+STATUS_FILE=".sv/ai-status.md"
+LATEST_FILE=".sv/ai-status-latest.md"
+
+# Collect status info
+TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+GIT_BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
+GIT_CHANGES=$(git status --short 2>/dev/null | wc -l | tr -d ' ')
+NODE_PROCS=$(ps aux | grep -E '(node|tsx|vite)' | grep -v grep | wc -l | tr -d ' ')
+LISTENING=$(lsof -iTCP:3000 -sTCP:LISTEN 2>/dev/null | grep -c LISTEN || echo "0")
+
+STATUS_LINE="[$TIMESTAMP] Branch: $GIT_BRANCH | Changes: $GIT_CHANGES | Node procs: $NODE_PROCS | Port 3000: $([ "$LISTENING" = "1" ] && echo "UP" || echo "DOWN")"
+
+# Append to running log
+echo "$STATUS_LINE" >> "$STATUS_FILE"
+
+# Update latest file with more details
+{
+  echo "# AI Status Report"
+  echo "Generated: $TIMESTAMP"
+  echo ""
+  echo "## Quick Status"
+  echo "- **Branch:** $GIT_BRANCH"
+  echo "- **Uncommitted Changes:** $GIT_CHANGES files"
+  echo "- **Node Processes:** $NODE_PROCS running"
+  echo "- **Dev Server:** $([ "$LISTENING" = "1" ] && echo "✅ Running on port 3000" || echo "❌ Not running")"
+  echo ""
+  
+  if [ "$GIT_CHANGES" -gt 0 ]; then
+    echo "## Changed Files"
+    echo '```'
+    git status --short 2>/dev/null | head -10
+    [ "$GIT_CHANGES" -gt 10 ] && echo "... and $((GIT_CHANGES - 10)) more"
+    echo '```'
+  fi
+} > "$LATEST_FILE"
+
+echo "Status updated: $STATUS_LINE"
+echo "Details in: $LATEST_FILE"

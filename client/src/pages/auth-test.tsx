@@ -17,7 +17,7 @@ export default function AuthTest() {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      await apiRequest('POST', '/api/auth/login', { email, password });
+      await apiRequest("POST", "/api/auth/login", { email, password });
       toast({
         title: "Login successful!",
         description: "Welcome back!",
@@ -37,12 +37,12 @@ export default function AuthTest() {
   const handleSignup = async () => {
     setLoading(true);
     try {
-      await apiRequest('POST', '/api/auth/signup', {
+      await apiRequest("POST", "/api/auth/signup", {
         email,
         password,
         firstName: "Test",
         lastName: "User",
-        plan: "Starter"
+        plan: "Starter",
       });
       toast({
         title: "Account created!",
@@ -65,9 +65,7 @@ export default function AuthTest() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Authentication Test</CardTitle>
-          <p className="text-muted-foreground">
-            Quick test login or create account
-          </p>
+          <p className="text-muted-foreground">Quick test login or create account</p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -88,28 +86,19 @@ export default function AuthTest() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          
+
           <div className="flex gap-2">
-            <Button 
-              onClick={handleLogin} 
-              className="flex-1"
-              disabled={loading}
-            >
+            <Button onClick={handleLogin} className="flex-1" disabled={loading}>
               {loading ? "..." : "Login"}
             </Button>
-            <Button 
-              onClick={handleSignup} 
-              variant="outline"
-              className="flex-1"
-              disabled={loading}
-            >
+            <Button onClick={handleSignup} variant="outline" className="flex-1" disabled={loading}>
               {loading ? "..." : "Create Account"}
             </Button>
           </div>
-          
+
           <div className="text-center pt-4">
             <Button
-              onClick={() => window.location.href = '/api/login'}
+              onClick={() => (window.location.href = "/api/login")}
               variant="outline"
               className="w-full"
             >

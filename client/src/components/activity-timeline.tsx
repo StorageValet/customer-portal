@@ -65,7 +65,9 @@ export default function ActivityTimeline({ movements }: ActivityTimelineProps) {
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <p className="font-medium text-navy">{getMovementText(movement.type)}</p>
-                    <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(movement.status)}`}>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${getStatusColor(movement.status)}`}
+                    >
                       {movement.status.charAt(0).toUpperCase() + movement.status.slice(1)}
                     </span>
                   </div>
@@ -84,7 +86,9 @@ export default function ActivityTimeline({ movements }: ActivityTimelineProps) {
           <div className="text-center py-8">
             <Clock className="h-12 w-12 text-gray-300 mx-auto mb-3" />
             <p className="text-gray-regent">No recent activity</p>
-            <p className="text-sm text-gray-400 mt-1">Schedule a pickup or delivery to get started</p>
+            <p className="text-sm text-gray-400 mt-1">
+              Schedule a pickup or delivery to get started
+            </p>
           </div>
         )}
       </CardContent>

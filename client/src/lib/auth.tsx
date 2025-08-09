@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "./queryClient";
+import { apiRequest, getQueryFn } from "./queryClient";
 
 interface User {
   id: number;
@@ -9,6 +9,11 @@ interface User {
   lastName: string;
   plan: string;
   setupFeePaid: boolean;
+  phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
 }
 
 interface AuthContextType {
@@ -26,42 +31,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
   const [user, setUser] = useState<User | null>(null);
 
   const { data: userData, isLoading } = useQuery({
-    queryKey: ['/api/auth/me'],
+    queryKey: ["/api/auth/user"],
+    queryFn: getQueryFn({ on401: "returnNull" }),
     retry: false,
     refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
-    if (userData?.user) {
-      setUser(userData.user);
+    if (userData) {
+      setUser(userData as User);
     }
   }, [userData]);
 
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      const response = await apiRequest('POST', '/api/auth/login', { email, password });
+      const response = await apiRequest("POST", "/api/auth/login", { email, password });
       return response.json();
     },
     onSuccess: (data) => {
       setUser(data.user);
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
     },
   });
 
   const signupMutation = useMutation({
     mutationFn: async (userData: any) => {
-      const response = await apiRequest('POST', '/api/auth/signup', userData);
+      const response = await apiRequest("POST", "/api/auth/signup", userData);
       return response.json();
     },
     onSuccess: (data) => {
       setUser(data.user);
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
     },
   });
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await apiRequest('POST', '/api/auth/logout');
+      await apiRequest("POST", "/api/auth/logout");
     },
     onSuccess: () => {
       setUser(null);
@@ -99,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }): React
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

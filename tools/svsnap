@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$REPO_ROOT"
+mkdir -p "$REPO_ROOT/.sv"
+
+SNAP=".sv/snapshot-$(date +%Y-%m-%d_%H-%M-%S).md"
+
+{
+  echo "# Snapshot $(date '+%Y-%m-%d %H:%M:%S')"
+  echo ""
+  
+  echo "## Git Status"
+  echo '```'
+  git status --short 2>/dev/null || echo "(not in git repo)"
+  echo '```'
+  echo ""
+  
+  echo "## Listening Ports"
+  echo '```'
+  lsof -iTCP -sTCP:LISTEN -P 2>/dev/null | grep -E '(node|tsx|vite)' || echo "(no node services listening)"
+  echo '```'
+  echo ""
+  
+  echo "## Node Processes"
+  echo '```'
+  ps aux | grep -E '(node|tsx|vite)' | grep -v grep || echo "(no node processes)"
+  echo '```'
+  echo ""
+  
+  if [ -f .sv/term.log ]; then
+    echo "## Last Terminal Output"
+    echo '```'
+    tail -20 .sv/term.log
+    echo '```'
+  fi
+} > "$SNAP"
+
+echo "Snapshot saved: $SNAP"

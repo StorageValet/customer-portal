@@ -10,25 +10,26 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Settings, 
-  DollarSign, 
-  Shield, 
-  Calendar, 
-  Users, 
+import {
+  Settings,
+  DollarSign,
+  Shield,
+  Calendar,
+  Users,
   Clock,
   AlertCircle,
   CheckCircle2,
-  Save
+  Save,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import Navigation from "@/components/navigation";
 
 interface AdminSettings {
   pricing: {
-    starter: { monthly: number; setup: number; };
-    medium: { monthly: number; setup: number; };
-    family: { monthly: number; setup: number; };
+    starter: { monthly: number; setup: number };
+    medium: { monthly: number; setup: number };
+    family: { monthly: number; setup: number };
   };
   insurance: {
     starter: number;
@@ -61,57 +62,86 @@ interface AdminSettings {
 }
 
 export default function AdminPanel() {
+  const [isSettingUpTestData, setIsSettingUpTestData] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
+
   const [settings, setSettings] = useState<AdminSettings>({
     pricing: {
-      starter: { monthly: 199, setup: 100 },
-      medium: { monthly: 299, setup: 150 },
-      family: { monthly: 359, setup: 180 }
+      starter: { monthly: 199, setup: 99.5 },
+      medium: { monthly: 299, setup: 149.5 },
+      family: { monthly: 349, setup: 174.5 },
     },
     insurance: {
       starter: 2000,
       medium: 3000,
-      family: 4000
+      family: 4000,
     },
     calendar: {
-      availableDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
+      availableDays: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
       timeSlots: [
-        { id: '1', label: '8:00 AM - 12:00 PM', startTime: '08:00', endTime: '12:00', weekendOnly: false, premium: false },
-        { id: '2', label: '12:00 PM - 4:00 PM', startTime: '12:00', endTime: '16:00', weekendOnly: false, premium: false },
-        { id: '3', label: '4:00 PM - 8:00 PM', startTime: '16:00', endTime: '20:00', weekendOnly: false, premium: false },
-        { id: '4', label: '9:00 AM - 1:00 PM (Weekend)', startTime: '09:00', endTime: '13:00', weekendOnly: true, premium: true }
+        {
+          id: "1",
+          label: "8:00 AM - 12:00 PM",
+          startTime: "08:00",
+          endTime: "12:00",
+          weekendOnly: false,
+          premium: false,
+        },
+        {
+          id: "2",
+          label: "12:00 PM - 4:00 PM",
+          startTime: "12:00",
+          endTime: "16:00",
+          weekendOnly: false,
+          premium: false,
+        },
+        {
+          id: "3",
+          label: "4:00 PM - 8:00 PM",
+          startTime: "16:00",
+          endTime: "20:00",
+          weekendOnly: false,
+          premium: false,
+        },
+        {
+          id: "4",
+          label: "9:00 AM - 1:00 PM (Weekend)",
+          startTime: "09:00",
+          endTime: "13:00",
+          weekendOnly: true,
+          premium: true,
+        },
       ],
       advanceBookingDays: 14,
-      emergencyBookingEnabled: true
+      emergencyBookingEnabled: true,
     },
     referralCredits: {
       newCustomerCredit: 50,
       referrerCredit: 50,
-      enabled: true
+      enabled: true,
     },
     serviceAreas: {
-      primaryZones: ['Downtown', 'Midtown', 'Uptown'],
-      extendedZones: ['Suburbs North', 'Suburbs South', 'Suburbs East', 'Suburbs West'],
-      rushDeliveryZones: ['Downtown', 'Midtown']
-    }
+      primaryZones: ["Downtown", "Midtown", "Uptown"],
+      extendedZones: ["Suburbs North", "Suburbs South", "Suburbs East", "Suburbs West"],
+      rushDeliveryZones: ["Downtown", "Midtown"],
+    },
   });
 
   // Check if user is admin (you can modify this logic based on your auth system)
-  const isAdmin = user?.email === 'admin@mystoragevalet.com' || user?.email === 'carol@example.com';
+  const isAdmin = user?.email === "admin@mystoragevalet.com" || user?.email === "carol@example.com";
 
   const saveSettingsMutation = useMutation({
     mutationFn: async (newSettings: AdminSettings) => {
       // This would normally save to your backend
-      const response = await fetch('/api/admin/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(newSettings)
+      const response = await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(newSettings),
       });
-      if (!response.ok) throw new Error('Failed to save settings');
+      if (!response.ok) throw new Error("Failed to save settings");
       return response.json();
     },
     onSuccess: () => {
@@ -119,7 +149,7 @@ export default function AdminPanel() {
         title: "Settings Saved",
         description: "Admin settings have been updated successfully.",
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/admin/settings'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/settings"] });
     },
     onError: () => {
       toast({
@@ -134,26 +164,51 @@ export default function AdminPanel() {
     saveSettingsMutation.mutate(settings);
   };
 
+  const handleSetupTestData = async () => {
+    if (!confirm("This will create test customer accounts and sample data. Continue?")) {
+      return;
+    }
+
+    setIsSettingUpTestData(true);
+    try {
+      const response = await apiRequest("POST", "/api/setup-test-data");
+      const data = await response.json();
+
+      toast({
+        title: "Test Data Created",
+        description: "Test customer accounts and sample data have been created successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to setup test data",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSettingUpTestData(false);
+    }
+  };
+
   const updatePricing = (plan: string, field: string, value: number) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
       pricing: {
         ...prev.pricing,
         [plan]: {
           ...prev.pricing[plan as keyof typeof prev.pricing],
-          [field]: value
-        }
-      }
+          [field]: value,
+        },
+      },
     }));
   };
 
   const updateInsurance = (plan: string, value: number) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
       insurance: {
         ...prev.insurance,
-        [plan]: value
-      }
+        [plan]: value,
+      },
     }));
   };
 
@@ -166,7 +221,9 @@ export default function AdminPanel() {
             <CardContent className="p-8 text-center">
               <AlertCircle className="mx-auto h-12 w-12 text-red-500 mb-4" />
               <h1 className="text-2xl font-bold text-navy mb-2">Access Restricted</h1>
-              <p className="text-gray-regent">You don't have permission to access the admin panel.</p>
+              <p className="text-gray-regent">
+                You don't have permission to access the admin panel.
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -187,16 +244,18 @@ export default function AdminPanel() {
                   <Settings className="mr-3 h-6 w-6" />
                   Admin Panel
                 </h1>
-                <p className="text-gray-regent">Manage pricing, insurance, calendar settings, and service areas</p>
+                <p className="text-gray-regent">
+                  Manage pricing, insurance, calendar settings, and service areas
+                </p>
               </div>
-              
+
               <Button
                 onClick={handleSave}
                 disabled={saveSettingsMutation.isPending}
                 className="bg-teal text-navy hover:bg-teal-medium"
               >
                 <Save className="mr-2 h-4 w-4" />
-                {saveSettingsMutation.isPending ? 'Saving...' : 'Save All Changes'}
+                {saveSettingsMutation.isPending ? "Saving..." : "Save All Changes"}
               </Button>
             </div>
           </CardContent>
@@ -225,7 +284,9 @@ export default function AdminPanel() {
                   {Object.entries(settings.pricing).map(([plan, pricing]) => (
                     <Card key={plan} className="border-2">
                       <CardHeader>
-                        <CardTitle className="text-center text-navy capitalize">{plan} Plan</CardTitle>
+                        <CardTitle className="text-center text-navy capitalize">
+                          {plan} Plan
+                        </CardTitle>
                       </CardHeader>
                       <CardContent className="p-4 space-y-4">
                         <div>
@@ -233,7 +294,7 @@ export default function AdminPanel() {
                           <Input
                             type="number"
                             value={pricing.monthly}
-                            onChange={(e) => updatePricing(plan, 'monthly', Number(e.target.value))}
+                            onChange={(e) => updatePricing(plan, "monthly", Number(e.target.value))}
                             className="text-center text-lg font-bold"
                           />
                         </div>
@@ -242,7 +303,7 @@ export default function AdminPanel() {
                           <Input
                             type="number"
                             value={pricing.setup}
-                            onChange={(e) => updatePricing(plan, 'setup', Number(e.target.value))}
+                            onChange={(e) => updatePricing(plan, "setup", Number(e.target.value))}
                             className="text-center"
                           />
                         </div>
@@ -268,7 +329,9 @@ export default function AdminPanel() {
                   {Object.entries(settings.insurance).map(([plan, coverage]) => (
                     <Card key={plan} className="border-2">
                       <CardHeader>
-                        <CardTitle className="text-center text-navy capitalize">{plan} Plan</CardTitle>
+                        <CardTitle className="text-center text-navy capitalize">
+                          {plan} Plan
+                        </CardTitle>
                       </CardHeader>
                       <CardContent className="p-4">
                         <div>
@@ -305,20 +368,27 @@ export default function AdminPanel() {
                       <Input
                         type="number"
                         value={settings.calendar.advanceBookingDays}
-                        onChange={(e) => setSettings(prev => ({
-                          ...prev,
-                          calendar: { ...prev.calendar, advanceBookingDays: Number(e.target.value) }
-                        }))}
+                        onChange={(e) =>
+                          setSettings((prev) => ({
+                            ...prev,
+                            calendar: {
+                              ...prev.calendar,
+                              advanceBookingDays: Number(e.target.value),
+                            },
+                          }))
+                        }
                       />
                     </div>
-                    
+
                     <div className="flex items-center space-x-2">
                       <Switch
                         checked={settings.calendar.emergencyBookingEnabled}
-                        onCheckedChange={(checked) => setSettings(prev => ({
-                          ...prev,
-                          calendar: { ...prev.calendar, emergencyBookingEnabled: checked }
-                        }))}
+                        onCheckedChange={(checked) =>
+                          setSettings((prev) => ({
+                            ...prev,
+                            calendar: { ...prev.calendar, emergencyBookingEnabled: checked },
+                          }))
+                        }
                       />
                       <Label>Enable Emergency Booking</Label>
                     </div>
@@ -336,13 +406,19 @@ export default function AdminPanel() {
                 <CardContent className="p-6">
                   <div className="space-y-4">
                     {settings.calendar.timeSlots.map((slot, index) => (
-                      <div key={slot.id} className="flex items-center space-x-4 p-4 border rounded-lg">
+                      <div
+                        key={slot.id}
+                        className="flex items-center space-x-4 p-4 border rounded-lg"
+                      >
                         <Input
                           value={slot.label}
                           onChange={(e) => {
                             const newSlots = [...settings.calendar.timeSlots];
                             newSlots[index] = { ...slot, label: e.target.value };
-                            setSettings(prev => ({ ...prev, calendar: { ...prev.calendar, timeSlots: newSlots } }));
+                            setSettings((prev) => ({
+                              ...prev,
+                              calendar: { ...prev.calendar, timeSlots: newSlots },
+                            }));
                           }}
                           className="flex-1"
                         />
@@ -352,7 +428,10 @@ export default function AdminPanel() {
                             onCheckedChange={(checked) => {
                               const newSlots = [...settings.calendar.timeSlots];
                               newSlots[index] = { ...slot, weekendOnly: checked };
-                              setSettings(prev => ({ ...prev, calendar: { ...prev.calendar, timeSlots: newSlots } }));
+                              setSettings((prev) => ({
+                                ...prev,
+                                calendar: { ...prev.calendar, timeSlots: newSlots },
+                              }));
                             }}
                           />
                           <Label className="text-sm">Weekend Only</Label>
@@ -363,7 +442,10 @@ export default function AdminPanel() {
                             onCheckedChange={(checked) => {
                               const newSlots = [...settings.calendar.timeSlots];
                               newSlots[index] = { ...slot, premium: checked };
-                              setSettings(prev => ({ ...prev, calendar: { ...prev.calendar, timeSlots: newSlots } }));
+                              setSettings((prev) => ({
+                                ...prev,
+                                calendar: { ...prev.calendar, timeSlots: newSlots },
+                              }));
                             }}
                           />
                           <Label className="text-sm">Premium</Label>
@@ -390,37 +472,49 @@ export default function AdminPanel() {
                   <div className="flex items-center space-x-2">
                     <Switch
                       checked={settings.referralCredits.enabled}
-                      onCheckedChange={(checked) => setSettings(prev => ({
-                        ...prev,
-                        referralCredits: { ...prev.referralCredits, enabled: checked }
-                      }))}
+                      onCheckedChange={(checked) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          referralCredits: { ...prev.referralCredits, enabled: checked },
+                        }))
+                      }
                     />
                     <Label>Enable Referral Program</Label>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <Label>New Customer Credit ($)</Label>
                       <Input
                         type="number"
                         value={settings.referralCredits.newCustomerCredit}
-                        onChange={(e) => setSettings(prev => ({
-                          ...prev,
-                          referralCredits: { ...prev.referralCredits, newCustomerCredit: Number(e.target.value) }
-                        }))}
+                        onChange={(e) =>
+                          setSettings((prev) => ({
+                            ...prev,
+                            referralCredits: {
+                              ...prev.referralCredits,
+                              newCustomerCredit: Number(e.target.value),
+                            },
+                          }))
+                        }
                         disabled={!settings.referralCredits.enabled}
                       />
                     </div>
-                    
+
                     <div>
                       <Label>Referrer Credit ($)</Label>
                       <Input
                         type="number"
                         value={settings.referralCredits.referrerCredit}
-                        onChange={(e) => setSettings(prev => ({
-                          ...prev,
-                          referralCredits: { ...prev.referralCredits, referrerCredit: Number(e.target.value) }
-                        }))}
+                        onChange={(e) =>
+                          setSettings((prev) => ({
+                            ...prev,
+                            referralCredits: {
+                              ...prev.referralCredits,
+                              referrerCredit: Number(e.target.value),
+                            },
+                          }))
+                        }
                         disabled={!settings.referralCredits.enabled}
                       />
                     </div>
@@ -444,46 +538,54 @@ export default function AdminPanel() {
                   <div>
                     <Label>Primary Service Zones</Label>
                     <Textarea
-                      value={settings.serviceAreas.primaryZones.join(', ')}
-                      onChange={(e) => setSettings(prev => ({
-                        ...prev,
-                        serviceAreas: { 
-                          ...prev.serviceAreas, 
-                          primaryZones: e.target.value.split(', ').filter(zone => zone.trim()) 
-                        }
-                      }))}
+                      value={settings.serviceAreas.primaryZones.join(", ")}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          serviceAreas: {
+                            ...prev.serviceAreas,
+                            primaryZones: e.target.value.split(", ").filter((zone) => zone.trim()),
+                          },
+                        }))
+                      }
                       placeholder="Downtown, Midtown, Uptown"
                       rows={2}
                     />
                   </div>
-                  
+
                   <div>
                     <Label>Extended Service Zones</Label>
                     <Textarea
-                      value={settings.serviceAreas.extendedZones.join(', ')}
-                      onChange={(e) => setSettings(prev => ({
-                        ...prev,
-                        serviceAreas: { 
-                          ...prev.serviceAreas, 
-                          extendedZones: e.target.value.split(', ').filter(zone => zone.trim()) 
-                        }
-                      }))}
+                      value={settings.serviceAreas.extendedZones.join(", ")}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          serviceAreas: {
+                            ...prev.serviceAreas,
+                            extendedZones: e.target.value.split(", ").filter((zone) => zone.trim()),
+                          },
+                        }))
+                      }
                       placeholder="Suburbs North, Suburbs South"
                       rows={2}
                     />
                   </div>
-                  
+
                   <div>
                     <Label>Rush Delivery Zones</Label>
                     <Textarea
-                      value={settings.serviceAreas.rushDeliveryZones.join(', ')}
-                      onChange={(e) => setSettings(prev => ({
-                        ...prev,
-                        serviceAreas: { 
-                          ...prev.serviceAreas, 
-                          rushDeliveryZones: e.target.value.split(', ').filter(zone => zone.trim()) 
-                        }
-                      }))}
+                      value={settings.serviceAreas.rushDeliveryZones.join(", ")}
+                      onChange={(e) =>
+                        setSettings((prev) => ({
+                          ...prev,
+                          serviceAreas: {
+                            ...prev.serviceAreas,
+                            rushDeliveryZones: e.target.value
+                              .split(", ")
+                              .filter((zone) => zone.trim()),
+                          },
+                        }))
+                      }
                       placeholder="Downtown, Midtown"
                       rows={2}
                     />
@@ -493,6 +595,42 @@ export default function AdminPanel() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Developer Tools */}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="flex items-center text-lg text-navy">
+              <Settings className="mr-2 h-5 w-5" />
+              Developer Tools
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-medium mb-2">Test Data Setup</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Create test customer accounts with realistic scenarios for QA testing.
+                </p>
+                <Button
+                  onClick={handleSetupTestData}
+                  disabled={isSettingUpTestData}
+                  variant="outline"
+                >
+                  {isSettingUpTestData ? "Setting up..." : "Create Test Data"}
+                </Button>
+                <div className="mt-4 text-sm text-gray-600">
+                  <p>This will create:</p>
+                  <ul className="list-disc ml-5 mt-1">
+                    <li>new.customer@test.com - Brand new user (no items)</li>
+                    <li>active.family@test.com - Family plan (50 seasonal items)</li>
+                    <li>premium.user@test.com - Medium plan (20 high-value items)</li>
+                  </ul>
+                  <p className="mt-2">All test accounts use password: test123</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Status Alert */}
         {saveSettingsMutation.isSuccess && (

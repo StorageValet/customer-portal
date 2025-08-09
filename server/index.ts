@@ -1,10 +1,70 @@
+import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
+import crypto from "node:crypto";
+import registrationRoutes from "./routes/registration-routes";
+import promotionRoutes from "./routes/promotion-routes";
+import authRoutes from "./routes/auth-routes";
+import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import {
+  securityHeaders,
+  generalRateLimit,
+  globalErrorHandler,
+  corsOptions,
+} from "./middleware/security";
+
+// Global error handlers to prevent server crashes
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("[Unhandled Rejection] at:", promise, "reason:", reason);
+  // Don't exit - keep server running
+});
+
+process.on("uncaughtException", (error) => {
+  console.error("[Uncaught Exception]:", error);
+  // Log but don't exit unless it's truly fatal
+  if (error.message.includes("EADDRINUSE")) {
+    console.error("Port already in use, exiting...");
+    process.exit(1);
+  }
+});
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
+// Security middleware
+app.use(securityHeaders);
+app.use(cors(corsOptions));
+app.use(generalRateLimit);
+
+// Body parsing
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: false, limit: "10mb" }));
+
+// --- HMAC auth for /api/ingest/* (dev allows through if unset)
+const INGEST_SECRET = process.env.INGEST_WEBHOOK_SECRET || "";
+app.use("/api/ingest", (req, res, next) => {
+  if (!INGEST_SECRET) return next(); // dev mode
+  try {
+    const sig = String(req.header("x-sv-signature") || "");
+    const raw = JSON.stringify(req.body || {});
+    const mac = crypto.createHmac("sha256", INGEST_SECRET).update(raw).digest("hex");
+    if (crypto.timingSafeEqual(Buffer.from(mac), Buffer.from(sig))) return next();
+    return res.status(401).json({ ok:false, error:"invalid signature" });
+  } catch {
+    return res.status(401).json({ ok:false, error:"auth check failed" });
+  }
+});
+
+// --- Minimal ingest log (in-memory ring buffer; dev only)
+const INGEST_LOG: Array<{ts:string, email?:string, submission_id?:string, ok:boolean}> = [];
+function logIngest(entry: {email?:string, submission_id?:string, ok:boolean}) {
+  if (process.env.NODE_ENV !== "development") return;
+  INGEST_LOG.push({ ts:new Date().toISOString(), ...entry });
+  if (INGEST_LOG.length > 50) INGEST_LOG.shift();
+}
+// Export for use in routes
+(global as any).INGEST_LOG = INGEST_LOG;
+export { logIngest };
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -37,15 +97,26 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Initialize SendGrid email service with error handling
+  try {
+    const { sendGridService } = await import("./sendgrid-service");
+    await sendGridService.initialize();
+  } catch (error: any) {
+    console.warn("[SendGrid] Initialization failed:", error.message);
+    console.warn("[SendGrid] Email functionality will be limited");
+    // Continue server startup even if SendGrid fails
+  }
+
+  // Register main routes (includes session setup)
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+  // Add additional routes after session middleware is configured
+  app.use(registrationRoutes);
+  app.use(promotionRoutes);
+  app.use(authRoutes);
 
-    res.status(status).json({ message });
-    throw err;
-  });
+  // Global error handler
+  app.use(globalErrorHandler);
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
@@ -60,12 +131,33 @@ app.use((req, res, next) => {
   // Other ports are firewalled. Default to 5000 if not specified.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  const port = parseInt(process.env.PORT || "3000", 10);
+  // Bind to all interfaces for better compatibility
+  const host = '0.0.0.0';
+  server.listen(port, host, () => {
+    log(`serving on http://localhost:${port}`);
+    console.log(`
+✅ Server is running!
+────────────────────────────────────
+📍 Local URLs:
+   - http://localhost:${port}
+   - http://127.0.0.1:${port}
+   - http://0.0.0.0:${port}
+
+🔧 If you can't access the server:
+   - Close VS Code and try again
+   - Or use VS Code's port forwarding
+   - Check FIX_SERVER_ACCESS.md for solutions
+────────────────────────────────────`);
+  });
+
+  // Add error handler for server
+  server.on("error", (error: any) => {
+    if (error.code === "EADDRINUSE") {
+      console.error(`Port ${port} is already in use`);
+      process.exit(1);
+    } else {
+      console.error("Server error:", error);
+    }
   });
 })();

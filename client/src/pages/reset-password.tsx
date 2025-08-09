@@ -22,8 +22,8 @@ export default function ResetPassword() {
   useEffect(() => {
     // Extract token from URL query params
     const params = new URLSearchParams(window.location.search);
-    const tokenParam = params.get('token');
-    
+    const tokenParam = params.get("token");
+
     if (!tokenParam) {
       toast({
         title: "Invalid Link",
@@ -60,13 +60,13 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      await apiRequest('POST', '/api/auth/reset-password', { token, password });
+      await apiRequest("POST", "/api/auth/reset-password", { token, password });
       setSuccess(true);
       toast({
         title: "Password Reset Successfully",
         description: "Your password has been updated. You can now log in with your new password.",
       });
-      
+
       // Redirect to login after 3 seconds
       setTimeout(() => {
         navigate("/login");
@@ -84,17 +84,20 @@ export default function ResetPassword() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-oxford-blue via-charcoal to-sea-green p-4">
+      <div className="min-h-screen flex items-center justify-center bg-mint-cream p-4">
         <Card className="w-full max-w-md border-silver shadow-xl">
           <CardHeader className="text-center space-y-1">
             <div className="mx-auto mb-4 w-12 h-12 bg-sea-green/20 rounded-full flex items-center justify-center">
               <CheckCircle2 className="h-6 w-6 text-sea-green" />
             </div>
-            <CardTitle className="text-2xl font-bold text-oxford-blue">Password Reset Complete</CardTitle>
+            <CardTitle className="text-2xl font-bold text-oxford-blue">
+              Password Reset Complete
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-center text-charcoal">
-              Your password has been successfully reset. You will be redirected to the login page shortly.
+              Your password has been successfully reset. You will be redirected to the login page
+              shortly.
             </p>
             <Button
               onClick={() => navigate("/login")}
@@ -109,16 +112,14 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-oxford-blue via-charcoal to-sea-green p-4">
+    <div className="min-h-screen flex items-center justify-center bg-mint-cream p-4">
       <Card className="w-full max-w-md border-silver shadow-xl">
         <CardHeader className="text-center space-y-1">
           <div className="mx-auto mb-4 w-12 h-12 bg-sea-green/20 rounded-full flex items-center justify-center">
             <Lock className="h-6 w-6 text-sea-green" />
           </div>
           <CardTitle className="text-3xl font-bold text-oxford-blue">Reset Your Password</CardTitle>
-          <p className="text-charcoal">
-            Enter your new password below
-          </p>
+          <p className="text-charcoal">Enter your new password below</p>
         </CardHeader>
         <CardContent className="space-y-4">
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -162,7 +163,11 @@ export default function ResetPassword() {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-2 top-1/2 -translate-y-1/2 text-charcoal hover:text-oxford-blue"
                 >
-                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               </div>
             </div>

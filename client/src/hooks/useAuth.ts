@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { getQueryFn } from "../lib/queryClient";
 
 interface User {
   id: string;
@@ -12,6 +13,9 @@ interface User {
   stripeSubscriptionId?: string;
   phone?: string;
   address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
   referralCode?: string;
   preferredAuthMethod?: string;
   lastAuthMethod?: string;
@@ -22,6 +26,7 @@ interface User {
 export function useAuth() {
   const { data: user, isLoading } = useQuery<User>({
     queryKey: ["/api/auth/user"],
+    queryFn: getQueryFn({ on401: "returnNull" }),
     retry: false,
   });
 

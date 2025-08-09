@@ -1,149 +1,189 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Signup() {
-  const [, navigate] = useLocation();
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
-    address: "",
-    plan: "Starter",
-    referralCode: ""
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      await apiRequest('POST', '/api/auth/signup', formData);
-      toast({
-        title: "Account created!",
-        description: "Welcome to Storage Valet. Let's complete your setup payment.",
-      });
-      navigate("/setup-payment");
-    } catch (error: any) {
-      toast({
-        title: "Signup failed",
-        description: error.message || "Please check your information and try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
+  const [msg, setMsg] = useState<string|null>(null);
+  const [err, setErr] = useState<string|null>(null);
+  const [location, navigate] = useLocation();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  
+  useEffect(() => {
+    // If user is already authenticated, redirect to dashboard
+    if (isAuthenticated && !authLoading) {
+      navigate("/dashboard");
     }
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
+  }, [isAuthenticated, authLoading, navigate]);
+  
+  useEffect(() => {
+    // Check if user was redirected back from cancelled Stripe checkout
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('cancelled') === '1') {
+      setErr("Payment was cancelled. Please try again.");
+    }
+  }, [location]);
+  
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); 
+    setErr(null); 
+    setMsg(null); 
+    setLoading(true);
+    
+    const fd = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(fd.entries());
+    
+    try {
+      const r = await fetch("/api/auth/register", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+      const j = await r.json();
+      if (!r.ok || !j.ok) throw new Error(j.error || "Registration failed");
+      
+      if (j.status === "waitlist") {
+        setMsg("We're not in your area yet. You've been added to our priority waitlist and we'll notify you as soon as we expand to your location!");
+      } else if (j.checkout_url) {
+        // Redirect to Stripe checkout
+        window.location.href = j.checkout_url;
+        return;
+      } else {
+        setMsg("Almost there—please check your email.");
+      }
+    } catch (e:any) { 
+      setErr(e.message); 
+    } finally { 
+      setLoading(false); 
+    }
+  }
+  
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-oxford-blue via-charcoal to-sea-green p-4">
-      <Card className="w-full max-w-md border-silver">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-oxford-blue">Create Account</CardTitle>
-          <p className="text-charcoal">
-            Join Storage Valet
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Create your account</h1>
+          <p className="text-gray-600 mt-2">Start your white-glove storage journey</p>
+        </div>
+        
+        <form onSubmit={onSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Full name *
+            </label>
+            <input 
+              name="full_name" 
+              required 
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              placeholder="John Doe"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email *
+            </label>
+            <input 
+              name="email" 
+              type="email" 
+              required 
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              placeholder="john@example.com"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Phone (optional)
+            </label>
+            <input 
+              name="phone" 
+              type="tel"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              placeholder="(201) 555-0123"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              ZIP code *
+            </label>
+            <input 
+              name="zip" 
+              required 
+              pattern="^\d{5}(-\d{4})?$" 
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              placeholder="07030"
+              title="Please enter a valid 5-digit ZIP code"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Currently serving Hoboken, Jersey City, Weehawken, and surrounding areas
+            </p>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Choose your plan *
+            </label>
+            <select 
+              name="plan_tier" 
+              required 
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            >
+              <option value="199">Starter - $199/month</option>
+              <option value="299">Medium - $299/month</option>
+              <option value="359">Family - $359/month</option>
+            </select>
+            <p className="text-xs text-gray-500 mt-1">
+              Setup fee will be added at checkout
+            </p>
+          </div>
+          
+          <div className="flex items-start">
+            <input 
+              id="tos" 
+              name="agree_tos" 
+              type="checkbox" 
+              required 
+              className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <label htmlFor="tos" className="ml-2 text-sm text-gray-700">
+              I agree to the Terms of Service and Privacy Policy
+            </label>
+          </div>
+          
+          <input type="hidden" name="form_source" value="Website" />
+          
+          <button 
+            type="submit"
+            disabled={loading} 
+            className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "Processing..." : "Continue to payment"}
+          </button>
+          
+          {msg && (
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-blue-800">{msg}</p>
+            </div>
+          )}
+          
+          {err && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-800">{err}</p>
+            </div>
+          )}
+        </form>
+        
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            Already have an account?{" "}
+            <a href="/login" className="text-blue-600 hover:text-blue-700 font-medium">
+              Sign in
+            </a>
           </p>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
-                <Input
-                  id="firstName"
-                  value={formData.firstName}
-                  onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input
-                  id="lastName"
-                  value={formData.lastName}
-                  onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={formData.password}
-                onChange={(e) => handleInputChange('password', e.target.value)}
-                required
-                minLength={6}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone (Optional)</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="plan">Plan</Label>
-              <Select value={formData.plan} onValueChange={(value) => handleInputChange('plan', value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Starter">Starter - $199/month</SelectItem>
-                  <SelectItem value="Medium">Medium - $299/month</SelectItem>
-                  <SelectItem value="Family">Family - $359/month</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="referralCode">Referral Code (Optional)</Label>
-              <Input
-                id="referralCode"
-                value={formData.referralCode}
-                onChange={(e) => handleInputChange('referralCode', e.target.value)}
-                placeholder="Enter referral code for $50 credit"
-              />
-            </div>
-            
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Creating Account..." : "Create Account"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

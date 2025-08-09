@@ -1,8 +1,13 @@
 import type { Config } from "tailwindcss";
+import { svColors } from './tailwind.colors';
 
 export default {
-  darkMode: ["class"],
-  content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
+  darkMode: "media",
+  content: [
+    "./client/src/**/*.{ts,tsx,js,jsx}",
+    "./client/index.html",
+    "./server/**/*.{ts,js}",
+  ],
   theme: {
     extend: {
       borderRadius: {
@@ -11,6 +16,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        ...svColors,
+        // Radix UI compatibility mappings
         background: "var(--background)",
         foreground: "var(--foreground)",
         card: {
