@@ -1,0 +1,59 @@
+client/src/components/ui/input-otp.tsx(2,10): error TS2459: Module '"input-otp"' declares 'OTPInput' locally, but it is not exported.
+client/src/components/ui/input-otp.tsx(2,20): error TS2459: Module '"input-otp"' declares 'OTPInputContext' locally, but it is not exported.
+client/src/components/ui/input-otp.tsx(36,44): error TS18046: 'inputOTPContext' is of type 'unknown'.
+input-otp.tsx(2,10): error TS2303: Circular definition of import alias 'OTPInput'.
+input-otp.tsx(2,10): error TS2459: Module '"input-otp"' declares 'OTPInput' locally, but it is not exported.
+input-otp.tsx(2,20): error TS2303: Circular definition of import alias 'OTPInputContext'.
+input-otp.tsx(2,20): error TS2459: Module '"input-otp"' declares 'OTPInputContext' locally, but it is not exported.
+input-otp.tsx(36,44): error TS18046: 'inputOTPContext' is of type 'unknown'.
+server/replitAuth.ts(1,25): error TS2307: Cannot find module 'openid-client' or its corresponding type declarations.
+server/replitAuth.ts(2,47): error TS2307: Cannot find module 'openid-client/passport' or its corresponding type declarations.
+server/replitAuth.ts(4,22): error TS2307: Cannot find module 'passport' or its corresponding type declarations.
+server/replitAuth.ts(118,41): error TS2694: Namespace 'global.Express' has no exported member 'User'.
+server/replitAuth.ts(118,47): error TS7006: Parameter 'cb' implicitly has an 'any' type.
+server/replitAuth.ts(119,43): error TS2694: Namespace 'global.Express' has no exported member 'User'.
+server/replitAuth.ts(119,49): error TS7006: Parameter 'cb' implicitly has an 'any' type.
+server/replitAuth.ts(149,9): error TS2339: Property 'logout' does not exist on type 'Request<{}, any, any, ParsedQs, Record<string, any>>'.
+server/replitAuth.ts(161,20): error TS2339: Property 'user' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+server/replitAuth.ts(163,12): error TS2339: Property 'isAuthenticated' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+server/routes_old.ts(22,3): error TS2322: Type '"2025-06-30.basil"' is not assignable to type '"2025-07-30.basil"'.
+server/routes_old.ts(58,48): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string | Buffer<ArrayBufferLike>'.
+  Type 'undefined' is not assignable to type 'string | Buffer<ArrayBufferLike>'.
+server/routes_old.ts(63,9): error TS2353: Object literal may only specify known properties, and 'password' does not exist in type 'InsertUser'.
+server/routes_old.ts(82,7): error TS2322: Type 'string' is not assignable to type 'number'.
+server/routes_old.ts(108,59): error TS2339: Property 'password' does not exist on type 'User'.
+server/routes_old.ts(113,7): error TS2322: Type 'string' is not assignable to type 'number'.
+server/routes_old.ts(132,42): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(161,48): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(173,9): error TS2322: Type 'number' is not assignable to type 'string'.
+server/routes_old.ts(187,42): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(188,20): error TS2367: This comparison appears to be unintentional because the types 'string' and 'number' have no overlap.
+server/routes_old.ts(192,52): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(204,42): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(205,20): error TS2367: This comparison appears to be unintentional because the types 'string' and 'number' have no overlap.
+server/routes_old.ts(209,32): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(219,56): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(236,9): error TS2322: Type 'number' is not assignable to type 'string'.
+server/routes_old.ts(241,44): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(244,69): error TS2339: Property 'split' does not exist on type 'string[]'.
+server/routes_old.ts(251,32): error TS2339: Property 'timeSlot' does not exist on type 'Movement'.
+server/routes_old.ts(375,42): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(408,42): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(487,42): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+server/routes_old.ts(501,14): error TS2339: Property 'isAuthenticated' does not exist on type 'Request<{}, any, any, ParsedQs, Record<string, any>>'.
+server/routes_old.ts(512,71): error TS2339: Property 'user' does not exist on type 'Request<{}, any, any, ParsedQs, Record<string, any>>'.
+server/routes_old.ts(571,27): error TS2339: Property 'user' does not exist on type 'Request<{}, any, any, ParsedQs, Record<string, any>>'.
+server/routes_old.ts(571,76): error TS2339: Property 'user' does not exist on type 'Request<{}, any, any, ParsedQs, Record<string, any>>'.
+server/routes_old.ts(610,27): error TS2339: Property 'user' does not exist on type 'Request<{}, any, any, ParsedQs, Record<string, any>>'.
+server/routes_old.ts(610,76): error TS2339: Property 'user' does not exist on type 'Request<{}, any, any, ParsedQs, Record<string, any>>'.
+server/vite.ts(4,10): error TS2305: Module '"vite"' has no exported member 'createServer'.
+server/vite.ts(4,44): error TS2459: Module '"vite"' declares 'createLogger' locally, but it is not exported.
+server/vite.ts(34,15): error TS7006: Parameter 'msg' implicitly has an 'any' type.
+server/vite.ts(34,20): error TS7006: Parameter 'options' implicitly has an 'any' type.
+vite.config.ts(1,10): error TS2305: Module '"vite"' has no exported member 'defineConfig'.
+vite.ts(4,10): error TS2305: Module '"vite"' has no exported member 'createServer'.
+vite.ts(4,44): error TS2303: Circular definition of import alias 'createLogger'.
+vite.ts(4,44): error TS2459: Module '"vite"' declares 'createLogger' locally, but it is not exported.
+vite.ts(6,24): error TS2307: Cannot find module '../vite.config' or its corresponding type declarations.
+vite.ts(34,15): error TS7006: Parameter 'msg' implicitly has an 'any' type.
+vite.ts(34,20): error TS7006: Parameter 'options' implicitly has an 'any' type.

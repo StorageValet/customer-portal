@@ -23,7 +23,7 @@ export default function Appointments() {
   }
 
   const { data: movements = [], isLoading } = useQuery({
-    queryKey: ['/api/movements'],
+    queryKey: ["/api/movements"],
     queryFn: api.getMovements,
   });
 
@@ -32,9 +32,9 @@ export default function Appointments() {
   }
 
   const cancelMovementMutation = useMutation({
-    mutationFn: (id: number) => api.updateMovement(id, { status: 'cancelled' }),
+    mutationFn: (id: number) => api.updateMovement(id, { status: "cancelled" }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/movements'] });
+      queryClient.invalidateQueries({ queryKey: ["/api/movements"] });
       toast({
         title: "Appointment Cancelled",
         description: "Your appointment has been cancelled successfully.",
@@ -50,18 +50,18 @@ export default function Appointments() {
   });
 
   const handleReschedule = (movementId: number) => {
-    const movement = movements.find(m => m.id === movementId);
+    const movement = movements.find((m) => m.id === movementId.toString());
     if (movement) {
-      if (movement.type === 'pickup') {
-        setLocation('/schedule-pickup');
+      if (movement.type === "pickup") {
+        setLocation("/schedule-pickup");
       } else {
-        setLocation('/request-delivery');
+        setLocation("/request-delivery");
       }
     }
   };
 
   const handleCancel = (movementId: number) => {
-    if (confirm('Are you sure you want to cancel this appointment?')) {
+    if (confirm("Are you sure you want to cancel this appointment?")) {
       cancelMovementMutation.mutate(movementId);
     }
   };
@@ -95,18 +95,15 @@ export default function Appointments() {
                 </h1>
                 <p className="text-gray-regent">Manage your pickup and delivery appointments</p>
               </div>
-              
+
               <div className="flex items-center space-x-4">
-                <Button
-                  className="bg-teal text-navy hover:bg-teal-medium"
-                  asChild
-                >
+                <Button className="bg-teal text-navy hover:bg-teal-medium" asChild>
                   <Link href="/schedule-pickup">
                     <Plus className="mr-2 h-4 w-4" />
                     Schedule Pickup
                   </Link>
                 </Button>
-                
+
                 <Button
                   variant="outline"
                   className="text-navy border-navy hover:bg-navy hover:text-white"
@@ -131,12 +128,12 @@ export default function Appointments() {
       </div>
 
       {/* AI Chatbot */}
-      <AIChatbot 
+      <AIChatbot
         currentPage="appointments"
         userContext={{
           totalAppointments: movements.length,
-          upcomingAppointments: movements.filter(m => m.status === 'scheduled').length,
-          completedAppointments: movements.filter(m => m.status === 'completed').length
+          upcomingAppointments: movements.filter((m) => m.status === "scheduled").length,
+          completedAppointments: movements.filter((m) => m.status === "completed").length,
         }}
       />
     </div>

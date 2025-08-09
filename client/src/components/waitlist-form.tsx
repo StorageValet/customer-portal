@@ -17,7 +17,7 @@ export default function WaitlistForm() {
 
   const joinWaitlistMutation = useMutation({
     mutationFn: async (data: { name: string; email: string; address: string; phone?: string }) => {
-      const response = await apiRequest('POST', '/api/waitlist', data);
+      const response = await apiRequest("POST", "/api/waitlist", data);
       return response.json();
     },
     onSuccess: () => {
@@ -59,7 +59,9 @@ export default function WaitlistForm() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="name" className="text-navy">Full Name *</Label>
+              <Label htmlFor="name" className="text-navy">
+                Full Name *
+              </Label>
               <Input
                 id="name"
                 type="text"
@@ -71,7 +73,9 @@ export default function WaitlistForm() {
               />
             </div>
             <div>
-              <Label htmlFor="email" className="text-navy">Email Address *</Label>
+              <Label htmlFor="email" className="text-navy">
+                Email Address *
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -84,7 +88,9 @@ export default function WaitlistForm() {
             </div>
           </div>
           <div>
-            <Label htmlFor="phone" className="text-navy">Phone Number</Label>
+            <Label htmlFor="phone" className="text-navy">
+              Phone Number
+            </Label>
             <Input
               id="phone"
               type="tel"
@@ -95,7 +101,9 @@ export default function WaitlistForm() {
             />
           </div>
           <div>
-            <Label htmlFor="address" className="text-navy">Delivery Address *</Label>
+            <Label htmlFor="address" className="text-navy">
+              Delivery Address *
+            </Label>
             <Textarea
               id="address"
               value={address}

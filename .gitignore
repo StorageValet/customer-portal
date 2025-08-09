@@ -1,0 +1,41 @@
+node_modules
+dist
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.*.local
+
+# IDE
+.vscode
+.idea
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+Thumbs.db
+.vercel
+
+# Development utilities
+.sv/
+# --- SV safety & OS noise ---
+# Secrets (keep templates tracked)
+.env.*
+\!.env.example
+\!.env.production.template
+# macOS & Finder
+Icon?
+Icon
+# Local tool state (keep repo clean)
+.claude/
+.local/
+node_modules/
+dist/
+build/

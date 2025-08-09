@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface TutorialStep {
   id: string;
   target: string; // CSS selector for the element to highlight
   title: string;
   content: string;
-  placement?: 'top' | 'bottom' | 'left' | 'right';
+  placement?: "top" | "bottom" | "left" | "right";
   action?: () => void; // Optional action to perform when step is shown
 }
 
@@ -33,47 +33,52 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
   // Tutorial steps configuration
   const steps: TutorialStep[] = [
     {
-      id: 'welcome',
-      target: '.dashboard-header',
-      title: 'Welcome to Storage Valet!',
-      content: 'Let me show you around your storage dashboard. This is where you\'ll manage all your stored items.',
-      placement: 'bottom'
+      id: "welcome",
+      target: ".dashboard-header",
+      title: "Welcome to Storage Valet!",
+      content:
+        "Let me show you around your storage dashboard. This is where you'll manage all your stored items.",
+      placement: "bottom",
     },
     {
-      id: 'add-item',
+      id: "add-item",
       target: '[href="/inventory"]',
-      title: 'Add Your First Item',
-      content: 'Click here to add items to your storage inventory. You can upload photos and track everything you store.',
-      placement: 'bottom'
+      title: "Add Your First Item",
+      content:
+        "Click here to add items to your storage inventory. You can upload photos and track everything you store.",
+      placement: "bottom",
     },
     {
-      id: 'quick-actions',
-      target: '.quick-actions-card',
-      title: 'Quick Actions',
-      content: 'Use these buttons to schedule pickups and request deliveries. They\'ll be enabled after your setup payment.',
-      placement: 'top'
+      id: "quick-actions",
+      target: ".quick-actions-card",
+      title: "Quick Actions",
+      content:
+        "Use these buttons to schedule pickups and request deliveries. They'll be enabled after your setup payment.",
+      placement: "top",
     },
     {
-      id: 'stats',
-      target: '.stats-cards',
-      title: 'Your Storage Stats',
-      content: 'Keep track of your items, total value, insurance coverage, and storage usage at a glance.',
-      placement: 'bottom'
+      id: "stats",
+      target: ".stats-cards",
+      title: "Your Storage Stats",
+      content:
+        "Keep track of your items, total value, insurance coverage, and storage usage at a glance.",
+      placement: "bottom",
     },
     {
-      id: 'recent-items',
-      target: '.recent-items-card',
-      title: 'Recent Items',
-      content: 'Your recently added items appear here for quick access.',
-      placement: 'top'
+      id: "recent-items",
+      target: ".recent-items-card",
+      title: "Recent Items",
+      content: "Your recently added items appear here for quick access.",
+      placement: "top",
     },
     {
-      id: 'navigation',
-      target: 'nav',
-      title: 'Navigation Menu',
-      content: 'Access all features from the navigation bar. Explore inventory, appointments, analytics, and more!',
-      placement: 'bottom'
-    }
+      id: "navigation",
+      target: "nav",
+      title: "Navigation Menu",
+      content:
+        "Access all features from the navigation bar. Explore inventory, appointments, analytics, and more!",
+      placement: "bottom",
+    },
   ];
 
   // Check if user has seen tutorial
@@ -82,7 +87,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
       const tutorialKey = `tutorial_completed_${user.id}`;
       const completed = localStorage.getItem(tutorialKey);
       setHasSeenTutorial(!!completed);
-      
+
       // Auto-start tutorial for new users who haven't seen it
       if (!completed && !user.setupFeePaid) {
         // Small delay to let the page render
@@ -94,6 +99,10 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
   const startTutorial = () => {
     setIsActive(true);
     setCurrentStep(0);
+    // Wait a moment for the DOM to be ready
+    setTimeout(() => {
+      setIsActive(true);
+    }, 100);
   };
 
   const nextStep = () => {
@@ -114,7 +123,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
     setIsActive(false);
     setCurrentStep(0);
     if (user) {
-      localStorage.setItem(`tutorial_completed_${user.id}`, 'skipped');
+      localStorage.setItem(`tutorial_completed_${user.id}`, "skipped");
     }
   };
 
@@ -122,7 +131,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
     setIsActive(false);
     setCurrentStep(0);
     if (user) {
-      localStorage.setItem(`tutorial_completed_${user.id}`, 'completed');
+      localStorage.setItem(`tutorial_completed_${user.id}`, "completed");
     }
   };
 
@@ -146,7 +155,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
         previousStep,
         skipTutorial,
         completeTutorial,
-        resetTutorial
+        resetTutorial,
       }}
     >
       {children}
@@ -157,7 +166,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
 export function useTutorial() {
   const context = useContext(TutorialContext);
   if (context === undefined) {
-    throw new Error('useTutorial must be used within a TutorialProvider');
+    throw new Error("useTutorial must be used within a TutorialProvider");
   }
   return context;
 }

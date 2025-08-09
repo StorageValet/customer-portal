@@ -8,26 +8,27 @@ interface CategoryChartProps {
 
 export default function CategoryChart({ items }: CategoryChartProps) {
   // Process items to calculate value by category
-  const categoryData = items.reduce((acc, item) => {
-    const existing = acc.find(cat => cat.name === item.category);
-    if (existing) {
-      existing.value += item.estimatedValue;
-    } else {
-      acc.push({
-        name: item.category,
-        value: item.estimatedValue,
-      });
-    }
-    return acc;
-  }, [] as { name: string; value: number }[]);
+  const categoryData = items.reduce(
+    (acc, item) => {
+      const existing = acc.find((cat) => cat.name === item.category);
+      if (existing) {
+        existing.value += item.estimatedValue;
+      } else {
+        acc.push({
+          name: item.category,
+          value: item.estimatedValue,
+        });
+      }
+      return acc;
+    },
+    [] as { name: string; value: number }[]
+  );
 
   // Sort by value descending and take top categories
-  const sortedData = categoryData
-    .sort((a, b) => b.value - a.value)
-    .slice(0, 6); // Show top 6 categories
+  const sortedData = categoryData.sort((a, b) => b.value - a.value).slice(0, 6); // Show top 6 categories
 
   // Color palette for the chart
-  const COLORS = ['#14B8A6', '#0E7490', '#3B82F6', '#8B5CF6', '#EC4899', '#F59E0B'];
+  const COLORS = ["#14B8A6", "#0E7490", "#3B82F6", "#8B5CF6", "#EC4899", "#F59E0B"];
 
   // Custom label formatter
   const renderCustomLabel = ({ value }: { value: number }) => {
@@ -62,17 +63,17 @@ export default function CategoryChart({ items }: CategoryChartProps) {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip 
+                <Tooltip
                   formatter={(value: number) => `$${value.toLocaleString()}`}
                   contentStyle={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    padding: '8px 12px',
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "8px",
+                    padding: "8px 12px",
                   }}
                 />
-                <Legend 
-                  verticalAlign="bottom" 
+                <Legend
+                  verticalAlign="bottom"
                   height={36}
                   formatter={(value, entry) => (
                     <span className="text-sm text-gray-700">

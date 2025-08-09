@@ -1,6 +1,6 @@
-import { useStripe, Elements, PaymentElement, useElements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { useEffect, useState } from 'react';
+import { useStripe, Elements, PaymentElement, useElements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,7 +15,7 @@ import { Link } from "wouter";
 // Make sure to call `loadStripe` outside of a component's render to avoid
 // recreating the `Stripe` object on every render.
 if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
-  throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
+  throw new Error("Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY");
 }
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
@@ -27,15 +27,15 @@ const SetupPaymentForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const setupFees = {
-    starter: 100,
-    medium: 150,
-    family: 180
+    starter: 99.5,
+    medium: 149.5,
+    family: 174.5,
   };
 
   const monthlyFees = {
     starter: 199,
     medium: 299,
-    family: 359
+    family: 349,
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -97,25 +97,24 @@ const SetupPaymentForm = () => {
             <div className="text-3xl font-bold text-navy">${planAmount}</div>
             <div className="text-sm text-gray-600">One-time setup fee</div>
             <Separator className="my-4" />
-            <div className="text-sm text-gray-600">
-              Then ${monthlyAmount}/month
-            </div>
+            <div className="text-sm text-gray-600">Then ${monthlyAmount}/month</div>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <PaymentElement />
-          <Button 
-            type="submit" 
-            disabled={!stripe || isLoading} 
+          <Button
+            type="submit"
+            disabled={!stripe || isLoading}
             className="w-full bg-teal text-navy hover:bg-teal-medium"
           >
-            {isLoading ? 'Processing...' : `Pay $${planAmount} Setup Fee`}
+            {isLoading ? "Processing..." : `Pay $${planAmount} Setup Fee`}
           </Button>
         </form>
 
         <div className="text-xs text-gray-500 text-center">
-          Secure payment processed by Stripe. Your storage service will begin after payment confirmation.
+          Secure payment processed by Stripe. Your storage service will begin after payment
+          confirmation.
         </div>
       </CardContent>
     </Card>
@@ -129,11 +128,30 @@ export default function SetupPayment() {
   useEffect(() => {
     if (!user) return;
 
-    // Create PaymentIntent as soon as the page loads
-    apiRequest("POST", "/api/create-payment-intent")
+    const setupFees = {
+      starter: 99.5,
+      medium: 149.5,
+      family: 174.5,
+    };
+
+    const amount = setupFees[user.plan as keyof typeof setupFees] || 100;
+
+    // Create PaymentIntent with coupon code if available
+    apiRequest("POST", "/api/create-payment-intent", {
+      amount,
+      couponCode: user.referralCode,
+    })
       .then((res) => res.json())
       .then((data) => {
         setClientSecret(data.clientSecret);
+        // If coupon was applied and waived the fee completely, mark as paid
+        if (data.finalAmount === 0 && data.appliedCoupon) {
+          apiRequest("POST", "/api/setup-fee-paid")
+            .then(() => {
+              window.location.href = "/dashboard";
+            })
+            .catch(console.error);
+        }
       })
       .catch((error) => {
         console.error("Failed to create payment intent:", error);
@@ -157,10 +175,7 @@ export default function SetupPayment() {
         <Navigation />
         <div className="container mx-auto px-4 py-8">
           <Link href="/dashboard">
-            <Button 
-              variant="ghost" 
-              className="mb-4 text-oxford-blue hover:bg-silver/20"
-            >
+            <Button variant="ghost" className="mb-4 text-oxford-blue hover:bg-silver/20">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Button>
@@ -169,9 +184,11 @@ export default function SetupPayment() {
             <CardContent className="text-center py-8">
               <CheckCircle className="mx-auto h-12 w-12 text-green-500 mb-4" />
               <h2 className="text-xl font-semibold text-navy mb-2">Setup Complete</h2>
-              <p className="text-gray-600">Your setup fee has been paid and your account is active.</p>
-              <Button 
-                onClick={() => window.location.href = '/dashboard'}
+              <p className="text-gray-600">
+                Your setup fee has been paid and your account is active.
+              </p>
+              <Button
+                onClick={() => (window.location.href = "/dashboard")}
                 className="mt-4 bg-teal text-navy hover:bg-teal-medium"
               >
                 Go to Dashboard
@@ -203,10 +220,7 @@ export default function SetupPayment() {
       <Navigation />
       <div className="container mx-auto px-4 py-8">
         <Link href="/dashboard">
-          <Button 
-            variant="ghost" 
-            className="mb-4 text-oxford-blue hover:bg-silver/20"
-          >
+          <Button variant="ghost" className="mb-4 text-oxford-blue hover:bg-silver/20">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Dashboard
           </Button>

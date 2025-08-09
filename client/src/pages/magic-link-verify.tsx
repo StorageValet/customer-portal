@@ -15,19 +15,19 @@ export default function MagicLinkVerify() {
     // The magic link verification is handled by the backend GET route
     // which will redirect to dashboard if successful or to login with error
     const params = new URLSearchParams(window.location.search);
-    const error = params.get('error');
-    
+    const error = params.get("error");
+
     if (error) {
       setVerifying(false);
       setError(true);
-      
-      if (error === 'invalid_token') {
+
+      if (error === "invalid_token") {
         toast({
           title: "Invalid Magic Link",
           description: "This magic link is invalid. Please request a new one.",
           variant: "destructive",
         });
-      } else if (error === 'expired_token') {
+      } else if (error === "expired_token") {
         toast({
           title: "Expired Magic Link",
           description: "This magic link has expired. Please request a new one.",
@@ -40,7 +40,7 @@ export default function MagicLinkVerify() {
           variant: "destructive",
         });
       }
-      
+
       // Redirect to login after 3 seconds
       setTimeout(() => {
         navigate("/login");
@@ -83,12 +83,11 @@ export default function MagicLinkVerify() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-center text-charcoal">
-            {verifying 
+            {verifying
               ? "Please wait while we verify your magic link..."
-              : error 
-              ? "There was a problem with your magic link. Redirecting to login..."
-              : "You've been successfully signed in! Redirecting..."
-            }
+              : error
+                ? "There was a problem with your magic link. Redirecting to login..."
+                : "You've been successfully signed in! Redirecting..."}
           </p>
           {verifying && (
             <div className="flex justify-center">

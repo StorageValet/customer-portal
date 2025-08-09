@@ -1,0 +1,40 @@
+# Prettier ignore file
+node_modules/
+dist/
+build/
+.next/
+coverage/
+*.min.js
+*.min.css
+
+# Generated files
+client/dist/
+server/dist/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Temporary files
+.DS_Store
+.vscode/
+.idea/
+
+# Package files
+package-lock.json
+yarn.lock
+
+# Documentation that shouldn't be formatted
+CHANGELOG.md
+LICENSE

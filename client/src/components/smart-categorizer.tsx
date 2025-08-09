@@ -3,7 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Sparkles, Search, Filter, Tag, TrendingUp } from "lucide-react";
 
 interface SmartCategorizerProps {
@@ -18,110 +24,154 @@ export default function SmartCategorizer({ items, onCategoryUpdate }: SmartCateg
   // Smart categorization logic based on item names and descriptions
   const suggestCategory = (itemName: string, description?: string): string => {
     const text = (itemName + " " + (description || "")).toLowerCase();
-    
-    if (text.includes("clothes") || text.includes("shirt") || text.includes("dress") || 
-        text.includes("pants") || text.includes("jacket") || text.includes("shoes")) {
+
+    if (
+      text.includes("clothes") ||
+      text.includes("shirt") ||
+      text.includes("dress") ||
+      text.includes("pants") ||
+      text.includes("jacket") ||
+      text.includes("shoes")
+    ) {
       return "Clothing";
     }
-    if (text.includes("laptop") || text.includes("phone") || text.includes("tablet") || 
-        text.includes("computer") || text.includes("tv") || text.includes("electronics")) {
+    if (
+      text.includes("laptop") ||
+      text.includes("phone") ||
+      text.includes("tablet") ||
+      text.includes("computer") ||
+      text.includes("tv") ||
+      text.includes("electronics")
+    ) {
       return "Electronics";
     }
-    if (text.includes("christmas") || text.includes("holiday") || text.includes("winter") || 
-        text.includes("summer") || text.includes("decorations")) {
+    if (
+      text.includes("christmas") ||
+      text.includes("holiday") ||
+      text.includes("winter") ||
+      text.includes("summer") ||
+      text.includes("decorations")
+    ) {
       return "Seasonal";
     }
-    if (text.includes("book") || text.includes("document") || text.includes("paper") || 
-        text.includes("certificate") || text.includes("file")) {
+    if (
+      text.includes("book") ||
+      text.includes("document") ||
+      text.includes("paper") ||
+      text.includes("certificate") ||
+      text.includes("file")
+    ) {
       return "Documents";
     }
-    if (text.includes("kitchen") || text.includes("dish") || text.includes("pot") || 
-        text.includes("pan") || text.includes("utensil") || text.includes("cooking")) {
+    if (
+      text.includes("kitchen") ||
+      text.includes("dish") ||
+      text.includes("pot") ||
+      text.includes("pan") ||
+      text.includes("utensil") ||
+      text.includes("cooking")
+    ) {
       return "Kitchen";
     }
-    if (text.includes("sport") || text.includes("gym") || text.includes("bike") || 
-        text.includes("exercise") || text.includes("fitness")) {
+    if (
+      text.includes("sport") ||
+      text.includes("gym") ||
+      text.includes("bike") ||
+      text.includes("exercise") ||
+      text.includes("fitness")
+    ) {
       return "Sports";
     }
-    if (text.includes("toy") || text.includes("game") || text.includes("puzzle") || 
-        text.includes("doll") || text.includes("lego")) {
+    if (
+      text.includes("toy") ||
+      text.includes("game") ||
+      text.includes("puzzle") ||
+      text.includes("doll") ||
+      text.includes("lego")
+    ) {
       return "Toys";
     }
-    
+
     return "Other";
   };
 
   // Find items that could benefit from better categorization
-  const uncategorizedItems = items.filter(item => 
-    !item.category || item.category === "Other" || item.category === ""
+  const uncategorizedItems = items.filter(
+    (item) => !item.category || item.category === "Other" || item.category === ""
   );
 
   const suggestedRecategorizations = items
-    .map(item => ({
+    .map((item) => ({
       ...item,
-      suggestedCategory: suggestCategory(item.name, item.description)
+      suggestedCategory: suggestCategory(item.name, item.description),
     }))
-    .filter(item => 
-      item.category !== item.suggestedCategory && 
-      item.suggestedCategory !== "Other"
+    .filter(
+      (item) => item.category !== item.suggestedCategory && item.suggestedCategory !== "Other"
     );
 
-  const filteredSuggestions = suggestedRecategorizations.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (selectedCategory === "" || item.suggestedCategory === selectedCategory)
+  const filteredSuggestions = suggestedRecategorizations.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedCategory === "" || item.suggestedCategory === selectedCategory)
   );
 
-  const categoryDistribution = items.reduce((acc, item) => {
-    const category = item.category || "Uncategorized";
-    acc[category] = (acc[category] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const categoryDistribution = items.reduce(
+    (acc, item) => {
+      const category = item.category || "Uncategorized";
+      acc[category] = (acc[category] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
-  const sortedCategories = Object.entries(categoryDistribution)
-    .sort(([,a], [,b]) => b - a);
+  const sortedCategories = Object.entries(categoryDistribution).sort(
+    ([, a], [, b]) => (b as number) - (a as number)
+  );
 
   return (
     <div className="space-y-6">
       {/* Smart Suggestions Header */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center text-lg text-navy">
-            <Sparkles className="mr-2 h-5 w-5 text-teal" />
+          <CardTitle className="flex items-center text-lg text-oxford-blue">
+            <Sparkles className="mr-2 h-5 w-5 text-turquoise" />
             Smart Categorization Assistant
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-navy">{uncategorizedItems.length}</div>
-              <div className="text-sm text-gray-regent">Items need categories</div>
+              <div className="text-2xl font-bold text-oxford-blue">{uncategorizedItems.length}</div>
+              <div className="text-sm text-paynes-gray">Items need categories</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-teal">{suggestedRecategorizations.length}</div>
-              <div className="text-sm text-gray-regent">Better category suggestions</div>
+              <div className="text-2xl font-bold text-turquoise">
+                {suggestedRecategorizations.length}
+              </div>
+              <div className="text-sm text-paynes-gray">Better category suggestions</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-emerald">{sortedCategories.length}</div>
-              <div className="text-sm text-gray-regent">Categories in use</div>
+              <div className="text-2xl font-bold text-turquoise">{sortedCategories.length}</div>
+              <div className="text-sm text-paynes-gray">Categories in use</div>
             </div>
           </div>
 
           {/* Category Distribution */}
           <div className="space-y-3">
-            <h4 className="font-semibold text-navy">Category Distribution</h4>
+            <h4 className="font-semibold text-oxford-blue">Category Distribution</h4>
             <div className="space-y-2">
               {sortedCategories.slice(0, 5).map(([category, count]) => (
                 <div key={category} className="flex items-center justify-between">
-                  <span className="text-sm text-navy">{category}</span>
+                  <span className="text-sm text-oxford-blue">{category}</span>
                   <div className="flex items-center space-x-2">
                     <div className="w-24 bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-teal h-2 rounded-full" 
-                        style={{ width: `${(count / items.length) * 100}%` }}
+                      <div
+                        className="bg-turquoise h-2 rounded-full"
+                        style={{ width: `${((count as number) / items.length) * 100}%` }}
                       />
                     </div>
                     <Badge variant="outline" className="text-xs">
-                      {count}
+                      {count as number}
                     </Badge>
                   </div>
                 </div>
@@ -135,8 +185,8 @@ export default function SmartCategorizer({ items, onCategoryUpdate }: SmartCateg
       {suggestedRecategorizations.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center text-lg text-navy">
-              <TrendingUp className="mr-2 h-5 w-5 text-emerald" />
+            <CardTitle className="flex items-center text-lg text-oxford-blue">
+              <TrendingUp className="mr-2 h-5 w-5 text-turquoise" />
               Smart Category Suggestions
             </CardTitle>
           </CardHeader>
@@ -151,7 +201,10 @@ export default function SmartCategorizer({ items, onCategoryUpdate }: SmartCateg
                   className="w-full"
                 />
               </div>
-              <Select value={selectedCategory || "all"} onValueChange={(value) => setSelectedCategory(value === "all" ? "" : value)}>
+              <Select
+                value={selectedCategory || "all"}
+                onValueChange={(value) => setSelectedCategory(value === "all" ? "" : value)}
+              >
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="Filter by suggested category" />
                 </SelectTrigger>
@@ -171,44 +224,51 @@ export default function SmartCategorizer({ items, onCategoryUpdate }: SmartCateg
             {/* Suggestion List */}
             <div className="space-y-3">
               {filteredSuggestions.map((item) => (
-                <div key={item.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
+                >
                   <div className="flex-1">
                     <div className="flex items-center space-x-3">
                       <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                         {item.photoUrl ? (
-                          <img src={item.photoUrl} alt={item.name} className="w-full h-full object-cover rounded-lg" />
+                          <img
+                            src={item.photoUrl}
+                            alt={item.name}
+                            className="w-full h-full object-cover rounded-lg"
+                          />
                         ) : (
                           <Tag className="h-6 w-6 text-gray-400" />
                         )}
                       </div>
                       <div>
-                        <h4 className="font-semibold text-navy">{item.name}</h4>
+                        <h4 className="font-semibold text-oxford-blue">{item.name}</h4>
                         {item.description && (
-                          <p className="text-sm text-gray-regent line-clamp-1">{item.description}</p>
+                          <p className="text-sm text-paynes-gray line-clamp-1">
+                            {item.description}
+                          </p>
                         )}
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-4">
                     <div className="text-right">
-                      <div className="text-sm text-gray-regent">Current:</div>
-                      <Badge variant="outline">
-                        {item.category || "None"}
-                      </Badge>
+                      <div className="text-sm text-paynes-gray">Current:</div>
+                      <Badge variant="outline">{item.category || "None"}</Badge>
                     </div>
-                    
+
                     <div className="text-right">
-                      <div className="text-sm text-gray-regent">Suggested:</div>
-                      <Badge className="bg-teal/10 text-teal border-teal">
+                      <div className="text-sm text-paynes-gray">Suggested:</div>
+                      <Badge className="bg-turquoise/10 text-turquoise border-turquoise">
                         {item.suggestedCategory}
                       </Badge>
                     </div>
-                    
+
                     <Button
                       size="sm"
                       onClick={() => onCategoryUpdate(item.id, item.suggestedCategory)}
-                      className="bg-teal text-navy hover:bg-teal-medium"
+                      className="bg-turquoise text-oxford-blue hover:bg-turquoise/90"
                     >
                       Apply
                     </Button>
@@ -218,11 +278,10 @@ export default function SmartCategorizer({ items, onCategoryUpdate }: SmartCateg
             </div>
 
             {filteredSuggestions.length === 0 && (
-              <div className="text-center py-8 text-gray-regent">
-                {searchTerm || selectedCategory 
+              <div className="text-center py-8 text-paynes-gray">
+                {searchTerm || selectedCategory
                   ? "No matching suggestions found"
-                  : "All items are properly categorized! 🎉"
-                }
+                  : "All items are properly categorized! 🎉"}
               </div>
             )}
           </CardContent>

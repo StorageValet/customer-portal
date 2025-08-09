@@ -1,0 +1,250 @@
+# ⭐ Airtable Database Schema [Jul 27, 2025]
+
+## Storage Valet Airtable Schema Reference
+
+### **Customers**
+
+* Customer ID
+* First Name
+* Last Name
+* Full Name
+* Email
+* Phone
+* Password
+* Street Address
+* Unit/Apt
+* City
+* State
+* ZIP Code
+* Full Address
+* Building/Property
+* Monthly Plan
+* Billing Mode
+* Referral Code
+* Referred By
+* Referrer Customer
+* Acquisition Source
+* Account Status
+* Setup Fee Paid
+* First Pickup Date
+* Subscription Start Date
+* Insurance Tier
+* Total Insured Value
+* Account Created Date
+* Stripe Customer ID
+* Stripe Setup Payment ID
+* Stripe Subscription ID
+* Container Count
+* Total Referrals Made
+* Agreement Signed
+* Agreement Date
+* Container Delivery Preference
+* Container Delivery Status
+* À la Carte Selections
+* Movements
+* Specialty Items
+* Referrals
+* Notifications
+* Last sign-in
+
+⠀
+### **Containers**
+
+* QR Code
+* QR String
+* Customer
+* Customer First Name
+* Customer Last Name
+* Customer Email
+* Container Type
+* Item Name/Label
+* Description
+* Category Tags
+* Primary Photo
+* Additional Photos
+* Estimated Value
+* Photo Required
+* Fragile
+* Current Status
+* Current Location
+* Storage Start Date
+* Last Movement Date
+* Access Frequency Score
+* Stackable
+* Special Instructions
+* Created Date
+* Notifications
+* Movements
+* Start date
+* End date
+* Customers
+* Facility
+* Specialty ID
+* Anticipated Return Delivery Date
+* Approval Status
+* Approval Notes
+* Approved By
+* Approval Date
+* Special Handling Fee
+* QR Image URL
+* QR Image
+
+⠀
+### **Movements**
+
+* Movement ID
+* Movement Type
+* Requested Date
+* Time Window
+* Status
+* Container Count
+* Empty Containers Requested
+* Special Instructions
+* Driver/Team
+* Customers
+* Confirmed Date/Time
+* Service Address
+* Started At / Completed At
+* Driver Notes
+* Photos
+* Grouping ID
+* Notifications
+* Containers
+* Autonumber
+
+⠀
+### **Container Types**
+
+* Type ID
+* Type Name
+* Category
+* Dimensions
+* Volume (cubic ft)
+* Max Weight (lbs)
+* A la Carte Price
+* Image
+* Active
+* ID
+* Containers
+* BTB Price
+
+⠀
+### **Facilities**
+
+* Facility ID
+* Facility Name
+* Facility Type
+* Address
+* Total Sq Ft
+* Cost
+* Autopay Date
+* Info
+* Access Hours
+* Active Status
+* Total Cu Ft
+* Zones
+* Unit Number
+* Width (ft)
+* Depth (ft)
+* Height (ft)
+* Cost/Sq Ft
+* Cost/Cu Ft
+* Next Charge Date
+* Customers
+* Containers
+
+⠀
+### **Zones**
+
+* Zone ID
+* Zone Number
+* Zone Access Level
+* Notes
+* Sq. Ft.
+* Cu. Ft.
+* Current Capacity
+* Facility
+* Facility Name
+* Max Containers
+* Containers
+* Container Count
+
+⠀
+### **Properties**
+
+* Property ID
+* Property Name
+* Management Company
+* Full Address
+* Partnership Status
+* Partnership Start Date
+* Special Terms
+* Promo Code
+* Total Units
+* Notes
+* Management Company Website
+* ID
+* Customers
+
+⠀
+### **Promo Codes**
+
+* Code
+* Type
+* Value Type
+* Value Amount
+* Valid From
+* Valid Until
+* Max Uses
+* Times Used
+* Associated Building
+* Campaign Name
+* Active
+
+⠀
+### **Referrals**
+
+* Referral ID
+* Referrer
+* Referrer Code Used
+* Referred Email
+* Referred Customer
+* Referral Date
+* Status
+* Conversion Date
+* Referrer Reward
+* Referred Reward
+* Referrer Credit Applied
+* Referred Discount Applied
+
+⠀
+### **Notifications**
+
+* Notification ID
+* Customer
+* Type
+* Subject
+* Message
+* Send Method
+* Scheduled Send Time
+* Sent Time
+* Status
+* Related Movement
+* Related Container
+
+⠀
+### **Waitlist**
+
+* Waitlist ID
+* First Name
+* Last Name
+* Email
+* Phone
+* ZIP Code
+* City
+* What to Store
+* Referral Code Used
+* Submission Date
+* Status
+* Notes
+

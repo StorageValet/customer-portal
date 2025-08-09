@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import { useTutorial } from '@/contexts/tutorial-context';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import { useTutorial } from "@/contexts/tutorial-context";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function TutorialOverlay() {
   const { isActive, currentStep, steps, nextStep, previousStep, skipTutorial } = useTutorial();
@@ -26,24 +26,24 @@ export default function TutorialOverlay() {
     updateTargetPosition();
 
     // Update on scroll or resize
-    window.addEventListener('scroll', updateTargetPosition);
-    window.addEventListener('resize', updateTargetPosition);
+    window.addEventListener("scroll", updateTargetPosition);
+    window.addEventListener("resize", updateTargetPosition);
 
     // Observe DOM changes
     const observer = new MutationObserver(updateTargetPosition);
     observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
-      window.removeEventListener('scroll', updateTargetPosition);
-      window.removeEventListener('resize', updateTargetPosition);
+      window.removeEventListener("scroll", updateTargetPosition);
+      window.removeEventListener("resize", updateTargetPosition);
       observer.disconnect();
     };
   }, [isActive, currentStep, steps]);
 
-  if (!isActive || !steps[currentStep]) return null;
+  if (!isActive || !steps[currentStep] || !targetRect) return null;
 
   const step = steps[currentStep];
-  const placement = step.placement || 'bottom';
+  const placement = step.placement || "bottom";
 
   // Calculate tooltip position
   const getTooltipStyle = () => {
@@ -57,19 +57,19 @@ export default function TutorialOverlay() {
     let left = 0;
 
     switch (placement) {
-      case 'top':
+      case "top":
         top = targetRect.top - tooltipHeight - padding;
         left = targetRect.left + (targetRect.width - tooltipWidth) / 2;
         break;
-      case 'bottom':
+      case "bottom":
         top = targetRect.bottom + padding;
         left = targetRect.left + (targetRect.width - tooltipWidth) / 2;
         break;
-      case 'left':
+      case "left":
         top = targetRect.top + (targetRect.height - tooltipHeight) / 2;
         left = targetRect.left - tooltipWidth - padding;
         break;
-      case 'right':
+      case "right":
         top = targetRect.top + (targetRect.height - tooltipHeight) / 2;
         left = targetRect.right + padding;
         break;
@@ -90,7 +90,7 @@ export default function TutorialOverlay() {
     }
 
     return {
-      position: 'fixed' as const,
+      position: "fixed" as const,
       top: `${top}px`,
       left: `${left}px`,
       width: `${tooltipWidth}px`,
@@ -103,17 +103,17 @@ export default function TutorialOverlay() {
     if (!targetRect) return {};
 
     return {
-      position: 'fixed' as const,
+      position: "fixed" as const,
       top: `${targetRect.top - 4}px`,
       left: `${targetRect.left - 4}px`,
       width: `${targetRect.width + 8}px`,
       height: `${targetRect.height + 8}px`,
-      border: '3px solid',
-      borderColor: 'var(--sea-green)',
-      borderRadius: '8px',
-      pointerEvents: 'none' as const,
+      border: "3px solid",
+      borderColor: "var(--sea-green)",
+      borderRadius: "8px",
+      pointerEvents: "none" as const,
       zIndex: 9998,
-      boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)',
+      boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.5)",
     };
   };
 
@@ -123,7 +123,7 @@ export default function TutorialOverlay() {
       <div
         ref={overlayRef}
         className="fixed inset-0 z-[9997]"
-        style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         onClick={skipTutorial}
       />
 
@@ -153,7 +153,7 @@ export default function TutorialOverlay() {
                 <div
                   key={index}
                   className={`h-2 w-2 rounded-full transition-colors ${
-                    index === currentStep ? 'bg-sea-green' : 'bg-silver'
+                    index === currentStep ? "bg-sea-green" : "bg-silver"
                   }`}
                 />
               ))}
@@ -171,13 +171,13 @@ export default function TutorialOverlay() {
                   Previous
                 </Button>
               )}
-              
+
               <Button
                 size="sm"
                 onClick={nextStep}
                 className="bg-sea-green text-mint-cream hover:bg-sea-green/90"
               >
-                {currentStep === steps.length - 1 ? 'Finish' : 'Next'}
+                {currentStep === steps.length - 1 ? "Finish" : "Next"}
                 <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </div>

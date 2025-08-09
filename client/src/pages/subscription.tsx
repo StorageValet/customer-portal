@@ -1,6 +1,6 @@
-import { useStripe, Elements, PaymentElement, useElements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { useEffect, useState } from 'react';
+import { useStripe, Elements, PaymentElement, useElements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { useEffect, useState } from "react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +13,7 @@ import { CreditCard, Repeat } from "lucide-react";
 // Make sure to call `loadStripe` outside of a component's render to avoid
 // recreating the `Stripe` object on every render.
 if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
-  throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
+  throw new Error("Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY");
 }
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
@@ -27,7 +27,7 @@ const SubscriptionForm = () => {
   const monthlyFees = {
     starter: 199,
     medium: 299,
-    family: 359
+    family: 349,
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,12 +86,12 @@ const SubscriptionForm = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <PaymentElement />
-          <Button 
-            type="submit" 
-            disabled={!stripe || isLoading} 
+          <Button
+            type="submit"
+            disabled={!stripe || isLoading}
             className="w-full bg-teal text-navy hover:bg-teal-medium"
           >
-            {isLoading ? 'Setting up...' : `Subscribe for $${monthlyAmount}/month`}
+            {isLoading ? "Setting up..." : `Subscribe for $${monthlyAmount}/month`}
           </Button>
         </form>
 

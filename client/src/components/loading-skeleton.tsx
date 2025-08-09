@@ -5,14 +5,7 @@ interface SkeletonProps {
 }
 
 export function Skeleton({ className }: SkeletonProps) {
-  return (
-    <div
-      className={cn(
-        "animate-pulse rounded-md bg-silver/20",
-        className
-      )}
-    />
-  );
+  return <div className={cn("animate-pulse rounded-md bg-silver/20", className)} />;
 }
 
 export function DashboardSkeleton() {
@@ -125,12 +118,12 @@ export function AppointmentsSkeleton() {
         {/* Calendar Grid */}
         <div className="grid grid-cols-7 gap-2">
           {/* Day headers */}
-          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+          {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
             <div key={i} className="text-center py-2">
               <Skeleton className="h-4 w-6 mx-auto" />
             </div>
           ))}
-          
+
           {/* Calendar days */}
           {Array.from({ length: 35 }).map((_, i) => (
             <div key={i} className="aspect-square p-2">

@@ -1,5 +1,6 @@
 # Storage Valet Q&A Implementation Guide
-*Comprehensive questions and answers for Replit development and business operations*
+
+_Comprehensive questions and answers for Replit development and business operations_
 
 ## Authentication & Security
 
@@ -82,9 +83,10 @@ A: Extra scrutiny for customer-provided container claims, but same timeline and 
 ## Prohibited Items
 
 **Q: What items won't Storage Valet accept?**
-A: 
+A:
+
 - Food of any kind
-- Beverages  
+- Beverages
 - Lithium batteries (fire hazard)
 - Live plants, animals, or organic matter
 - Weapons or illegal items

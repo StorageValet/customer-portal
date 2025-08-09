@@ -20,11 +20,12 @@ export default function ForgotPassword() {
     setLoading(true);
 
     try {
-      await apiRequest('POST', '/api/auth/forgot-password', { email });
+      await apiRequest("POST", "/api/auth/forgot-password", { email });
       setEmailSent(true);
       toast({
         title: "Check your email",
-        description: "If an account exists with this email, you will receive a password reset link.",
+        description:
+          "If an account exists with this email, you will receive a password reset link.",
       });
     } catch (error: any) {
       toast({
@@ -39,7 +40,7 @@ export default function ForgotPassword() {
 
   if (emailSent) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-oxford-blue via-charcoal to-sea-green p-4">
+      <div className="min-h-screen flex items-center justify-center bg-mint-cream p-4">
         <Card className="w-full max-w-md border-silver shadow-xl">
           <CardHeader className="text-center space-y-1">
             <div className="mx-auto mb-4 w-12 h-12 bg-sea-green/20 rounded-full flex items-center justify-center">
@@ -49,7 +50,8 @@ export default function ForgotPassword() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-center text-charcoal">
-              We've sent a password reset link to <strong>{email}</strong> if an account exists with that email address.
+              We've sent a password reset link to <strong>{email}</strong> if an account exists with
+              that email address.
             </p>
             <p className="text-center text-sm text-charcoal">
               The link will expire in 1 hour. Don't forget to check your spam folder.
@@ -79,13 +81,11 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-oxford-blue via-charcoal to-sea-green p-4">
+    <div className="min-h-screen flex items-center justify-center bg-mint-cream p-4">
       <Card className="w-full max-w-md border-silver shadow-xl">
         <CardHeader className="text-center space-y-1">
           <CardTitle className="text-3xl font-bold text-oxford-blue">Forgot Password?</CardTitle>
-          <p className="text-charcoal">
-            Enter your email and we'll send you a reset link
-          </p>
+          <p className="text-charcoal">Enter your email and we'll send you a reset link</p>
         </CardHeader>
         <CardContent className="space-y-4">
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -112,7 +112,10 @@ export default function ForgotPassword() {
           </form>
 
           <div className="text-center">
-            <Link href="/login" className="text-sm text-sea-green hover:underline inline-flex items-center gap-1">
+            <Link
+              href="/login"
+              className="text-sm text-sea-green hover:underline inline-flex items-center gap-1"
+            >
               <ArrowLeft className="h-3 w-3" />
               Back to Login
             </Link>
