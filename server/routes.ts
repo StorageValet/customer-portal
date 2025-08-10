@@ -9,8 +9,8 @@ import { ReliableSessionStore } from "./simple-session-store";
 import { corsOptions } from "./middleware/security";
 
 // Import route modules
-import authRoutes from "./routes/auth-routes";
-import itemRoutes from "./routes/item-routes";
+import authRoutes from "./routes/auth-routes-v7";
+import itemRoutes from "./routes/item-routes-v7";
 import movementRoutes from "./routes/movement-routes";
 import paymentRoutes from "./routes/payment-routes";
 import adminRoutes from "./routes/admin-routes";

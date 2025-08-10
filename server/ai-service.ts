@@ -56,8 +56,8 @@ export class AIService {
             - Remember they are already customers, so don't try to sell them on the service
             
             Key Information:
-            - Plans: Starter ($199/mo), Medium ($299/mo), Family ($349/mo)
-            - Setup fees: Starter $99.50, Medium $149.50, Family $174.50
+            - Plans: Starter ($199/mo), Medium ($299/mo), Family ($399/mo)
+            - Setup fees: Starter $99.50, Medium $149.50, Family $179.50
             - Insurance coverage: Starter $2,000, Medium $3,000, Family $4,000
             - Service includes door-to-door pickup and delivery
             - All items are photographed and catalogued

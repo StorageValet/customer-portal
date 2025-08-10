@@ -8,6 +8,7 @@ import {
   InsertItem,
   InsertMovement,
 } from "@shared/schema";
+import { createEmailFilter, createArraySearchFilter } from "./lib/airtable-security";
 
 export interface IStorage {
   // User methods
@@ -43,11 +44,12 @@ const resetTokens = new Map<string, { userId: string; expires: Date }>();
 export class AirtableStorage implements IStorage {
   public base: any;
 
-  // Table name mappings
+  // Table name mappings - Updated for v7 schema
   private tables = {
-    users: "Customers",
-    items: "Containers",
-    movements: "Movements",
+    users: "Customers_v7",
+    items: "Items_v7",
+    movements: "Actions_v7",
+    operations: "Ops_v7",
   };
 
   // Field mappings to convert between app fields and Airtable fields
@@ -401,7 +403,7 @@ export class AirtableStorage implements IStorage {
     try {
       const records = await this.base(this.tables.users)
         .select({
-          filterByFormula: `{Email} = '${email}'`,
+          filterByFormula: createEmailFilter(email),
           maxRecords: 1,
         })
         .firstPage();
@@ -469,7 +471,7 @@ export class AirtableStorage implements IStorage {
     try {
       const records = await this.base(this.tables.items)
         .select({
-          filterByFormula: `SEARCH('${userId}', ARRAYJOIN({Customer}))`,
+          filterByFormula: createArraySearchFilter(userId, 'Customer'),
         })
         .all();
 

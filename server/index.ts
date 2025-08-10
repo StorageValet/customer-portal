@@ -3,7 +3,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import crypto from "node:crypto";
 import registrationRoutes from "./routes/registration-routes";
 import promotionRoutes from "./routes/promotion-routes";
-import authRoutes from "./routes/auth-routes";
+import authRoutes from "./routes/auth-routes-v7";
 import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
@@ -113,7 +113,7 @@ app.use((req, res, next) => {
   // Add additional routes after session middleware is configured
   app.use(registrationRoutes);
   app.use(promotionRoutes);
-  app.use(authRoutes);
+  app.use("/api/auth", authRoutes);
 
   // Global error handler
   app.use(globalErrorHandler);

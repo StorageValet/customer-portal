@@ -1,5 +1,0 @@
-{
-  "_comment": "This Express app is not compatible with Vercel's serverless architecture",
-  "_recommendation": "Deploy to Railway, Render, or another platform that supports traditional Node.js servers",
-  "_reason": "The app uses persistent Express server with sessions, middleware, and complex startup logic"
-}

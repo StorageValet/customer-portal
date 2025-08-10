@@ -1,5 +1,6 @@
 import { Store, SessionData } from "express-session";
 import Airtable from "airtable";
+import { createFieldMatchFilter } from "./lib/airtable-security";
 
 // Define type for session records
 interface SessionRecord extends Airtable.FieldSet {
@@ -28,7 +29,7 @@ export class AirtableSessionStore extends Store {
     try {
       this.base(this.tableName)
         .select({
-          filterByFormula: `{Session ID} = '${sid}'`,
+          filterByFormula: createFieldMatchFilter('Session ID', sid),
           maxRecords: 1,
         })
         .firstPage((err, records) => {
@@ -87,7 +88,7 @@ export class AirtableSessionStore extends Store {
       // Try to find existing session
       this.base(this.tableName)
         .select({
-          filterByFormula: `{Session ID} = '${sid}'`,
+          filterByFormula: createFieldMatchFilter('Session ID', sid),
           maxRecords: 1,
         })
         .firstPage((err, records) => {
@@ -122,7 +123,7 @@ export class AirtableSessionStore extends Store {
     try {
       this.base(this.tableName)
         .select({
-          filterByFormula: `{Session ID} = '${sid}'`,
+          filterByFormula: createFieldMatchFilter('Session ID', sid),
           maxRecords: 1,
         })
         .firstPage((err, records) => {
@@ -198,7 +199,7 @@ export class AirtableSessionStore extends Store {
 
       this.base(this.tableName)
         .select({
-          filterByFormula: `{Session ID} = '${sid}'`,
+          filterByFormula: createFieldMatchFilter('Session ID', sid),
           maxRecords: 1,
         })
         .firstPage((err, records) => {

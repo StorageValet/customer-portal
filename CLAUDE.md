@@ -8,6 +8,7 @@ Storage Valet Portal (SV Portal) is a customer portal application for a valet st
 
 - **Single Address System**: Each customer has ONE registered address on their account. All pickups and deliveries occur at this address.
 - **No Address Input**: Never ask customers for addresses during scheduling - use their registered account address automatically.
+- **Service Area**: 13 ZIP codes in Hudson County, NJ (07030, 07302, 07304, 07305, 07306, 07307, 07310, 07311, 07086, 07087, 07093, 07020, 07047)
 - **Route Optimization**: The single-address model enables AI/ML-powered route optimization to suggest optimal pickup/delivery times based on geographic clustering of customers.
 - **Service Types**:
   - **Pickup**: Collect items from customer's registered address to store in warehouse
@@ -91,13 +92,40 @@ SV-Portal_v6/
 - **Storage**: Dropbox integration for photos
 - **Payments**: Stripe integration
 
-## Current Pricing Model (v1)
-- **Starter Plan**: $199/month (Setup Fee: $99.50)
-- **Medium Plan**: $299/month (Setup Fee: $149.50)
-- **Family Plan**: $349/month (Setup Fee: $174.50)
-- **Billing Trigger**: Monthly billing starts after first movement, not at registration
-- **Model Type**: Fixed subscription - no per-container or à la carte pricing in v1
-- **Value Proposition**: Premium concierge service, not space rental
+## Current Pricing Model (Phase 1 - August 2025)
+- **Starter Plan**: $199/month (100 cu.ft, $2,000 insurance)
+- **Medium Plan**: $299/month (200 cu.ft, $3,000 insurance)  
+- **Family Plan**: $399/month (300 cu.ft, $4,000 insurance)
+- **Setup Fees**: 
+  - Starter: $99.50
+  - Medium: $149.50
+  - Family: $179.50
+  - Non-refundable, waivable with promo codes
+- **Billing Trigger**: Anniversary billing starts on EITHER:
+  - First pickup from customer's address, OR
+  - First delivery of empty containers to customer
+- **Additional Insurance**: $24/month per $1,000 above plan limits
+- **Value Proposition**: Premium concierge service with true bailee's insurance
+
+## CRITICAL DATA REQUIREMENTS (Non-Negotiable for Phase 1)
+### Must Capture for EVERY Item/Container:
+1. **Dimensions**: Length × Width × Height (inches)
+   - Required for cubic footage calculations
+   - Critical for route capacity planning  
+   - Foundation for 8-12x space arbitrage model
+2. **Weight**: Estimated weight (lbs)
+   - Truck capacity management
+   - Future robotics/automation compatibility
+3. **Estimated Value**: Customer-declared value ($)
+   - Insurance coverage determination
+   - Liability management
+   - Service tier justification
+
+### Business Model Context:
+- **Space Arbitrage**: We pay $X/cu.ft. wholesale, charge $8-12X retail
+- **Spatial Optimization**: Maximize cubic feet, not just square feet
+- **Data Strategy**: Capture maximum data for future AI/ML optimization
+- **Future Vision**: Autonomous delivery, robotic warehouse operations
 
 ## Environment Variables Required
 The application requires several environment variables. Check `.env.example` for the full list.

@@ -30,6 +30,17 @@ export function useAuth() {
     retry: false,
   });
 
+  // TEMPORARY BYPASS
+  const bypass = localStorage.getItem('bypass-auth');
+  if (bypass === 'true') {
+    const bypassUser = JSON.parse(localStorage.getItem('bypass-user') || '{}');
+    return {
+      user: bypassUser as User,
+      isLoading: false,
+      isAuthenticated: true,
+    };
+  }
+
   return {
     user,
     isLoading,

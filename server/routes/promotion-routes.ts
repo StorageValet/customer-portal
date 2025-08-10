@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { Tables } from "../airtable-mapping";
 import { getAirtableBase } from "../airtable-utils";
+import { createEmailFilter } from "../lib/airtable-security";
 
 const router = Router();
 const Promote = z.object({ lead_id: z.string().min(1) });
@@ -24,7 +25,7 @@ router.post("/api/ingest/promote-lead", async (req, res) => {
     if (!email || !fullName) return res.status(422).json({ ok:false, error:"Waitlist entry missing email/name" });
 
     // Upsert customer by email (pseudo—replace with your helper/select)
-    const existing = await base(Customers).select({ filterByFormula: `{Email}='${email}'` }).firstPage();
+    const existing = await base(Customers).select({ filterByFormula: createEmailFilter(email) }).firstPage();
     let custId: string;
     const payload: Record<string, any> = {
       "Email": email,

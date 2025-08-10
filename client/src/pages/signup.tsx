@@ -106,6 +106,55 @@ export default function Signup() {
           
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
+              Street Address *
+            </label>
+            <input 
+              name="address" 
+              required 
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              placeholder="123 Main Street"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Apartment/Unit (optional)
+            </label>
+            <input 
+              name="unit" 
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              placeholder="Apt 4B"
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                City *
+              </label>
+              <input 
+                name="city" 
+                required 
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                placeholder="Hoboken"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                State *
+              </label>
+              <select 
+                name="state" 
+                required 
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+              >
+                <option value="NJ">New Jersey</option>
+              </select>
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               ZIP code *
             </label>
             <input 
@@ -136,6 +185,20 @@ export default function Signup() {
             </select>
             <p className="text-xs text-gray-500 mt-1">
               Setup fee will be added at checkout
+            </p>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Promo Code (optional)
+            </label>
+            <input 
+              name="promo_code" 
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              placeholder="Enter promo code"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Have a promo code? Enter it here to waive setup fees
             </p>
           </div>
           
