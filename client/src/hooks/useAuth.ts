@@ -1,49 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import { getQueryFn } from "../lib/queryClient";
-
-interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  plan: string;
-  setupFeePaid: boolean;
-  insuranceCoverage: number;
-  stripeCustomerId?: string;
-  stripeSubscriptionId?: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  state?: string;
-  zip?: string;
-  referralCode?: string;
-  preferredAuthMethod?: string;
-  lastAuthMethod?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
+import { useQuery } from '@tanstack/react-query';
+import { api } from '../lib/api';
 export function useAuth() {
-  const { data: user, isLoading } = useQuery<User>({
-    queryKey: ["/api/auth/user"],
-    queryFn: getQueryFn({ on401: "returnNull" }),
-    retry: false,
-  });
-
-  // TEMPORARY BYPASS
-  const bypass = localStorage.getItem('bypass-auth');
-  if (bypass === 'true') {
-    const bypassUser = JSON.parse(localStorage.getItem('bypass-user') || '{}');
-    return {
-      user: bypassUser as User,
-      isLoading: false,
-      isAuthenticated: true,
-    };
-  }
-
-  return {
-    user,
-    isLoading,
-    isAuthenticated: !!user,
-  };
+  const q = useQuery({ queryKey: ['me'], queryFn: api.me, retry: false, staleTime: 30000 });
+  return { user: q.data || null, loading: q.isLoading, error: q.error as any, refetch: q.refetch, isAuthenticated: !!q.data };
 }
