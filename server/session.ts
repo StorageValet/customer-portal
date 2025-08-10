@@ -1,25 +1,47 @@
 import type { Express } from 'express';
 import session from 'express-session';
 import cookieSession from 'cookie-session';
-import RedisStoreFactory from 'connect-redis';
-import Redis from 'ioredis';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+
 const isProd = process.env.NODE_ENV === 'production';
+const sessionName = 'sv.sid';
 const oneMonth = 30 * 24 * 60 * 60 * 1000;
+
 export function mountSession(app: Express) {
-  const name = 'sv.sid';
-  const choice = (process.env.SESSION_STORE || 'cookie').toLowerCase();
-  if (choice === 'redis') {
-    const RedisStore = RedisStoreFactory(session);
-    const redis = new Redis(process.env.REDIS_URL || '');
+  const storeChoice = (process.env.SESSION_STORE || 'cookie').toLowerCase();
+
+  if (storeChoice === 'redis') {
+    const mod = require('connect-redis');
+    const RedisStoreCtor = (mod as any).default || (mod as any).RedisStore || mod;
+    const IORedis = require('ioredis');
+    const redis = new IORedis(process.env.REDIS_URL || '');
+    const store = new (RedisStoreCtor as any)({ client: redis, prefix: 'sv:sess:' });
+
     app.use(session({
-      name,
+      name: sessionName,
       secret: process.env.SESSION_SECRET || 'dev-secret',
       resave: false,
       saveUninitialized: false,
-      store: new RedisStore({ client: redis, prefix: 'sv:sess:' }),
-      cookie: { httpOnly: true, secure: isProd, sameSite: 'lax', maxAge: oneMonth, path: '/' },
+      store,
+      cookie: {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: 'lax',
+        maxAge: oneMonth,
+        path: '/',
+      },
     } as any));
   } else {
-    app.use(cookieSession({ name, keys: [process.env.SESSION_SECRET || 'dev-secret'], httpOnly: true, secure: isProd, sameSite: 'lax', maxAge: oneMonth, path: '/' }));
+    app.use(cookieSession({
+      name: sessionName,
+      keys: [process.env.SESSION_SECRET || 'dev-secret'],
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'lax',
+      maxAge: oneMonth,
+      path: '/',
+    }));
   }
 }
